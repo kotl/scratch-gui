@@ -73,7 +73,6 @@ const mapStateToProps = (state, {selectedCostumeIndex}) => {
         rotationCenterY: costume && costume.rotationCenterY,
         imageFormat: costume && costume.dataFormat,
         imageId: targetId && `${targetId}${costume.skinId}`,
-        zoomClassId: targetId,
         image: state.scratchGui.vm.getCostume(index),
         vm: state.scratchGui.vm
     };

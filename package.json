@@ -28,6 +28,9 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
+  "dependencies": {
+    "scratch-paint": "github:fsih/scratch-paint#keyboardShortcuts"
+  },
   "devDependencies": {
     "arraybuffer-loader": "^1.0.6",
     "autoprefixer": "^9.0.1",
@@ -98,7 +101,6 @@
     "scratch-audio": "0.1.0-prerelease.20180625202813",
     "scratch-blocks": "0.1.0-prerelease.1534979688",
     "scratch-l10n": "3.0.20180823152851",
-    "scratch-paint": "0.2.0-prerelease.20180822171824",
     "scratch-render": "0.1.0-prerelease.20180820154012",
     "scratch-storage": "0.5.1",
     "scratch-svg-renderer": "0.2.0-prerelease.20180817005452",
