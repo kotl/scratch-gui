@@ -5,6 +5,8 @@
   "main": "./dist/scratch-gui.js",
   "scripts": {
     "build": "npm run clean && webpack --progress --colors --bail",
+    "serve-prod": "npm run clean && webpack --progress --colors --bail && node server.js",
+    "serve": "concurrently --kill-others \"npm run watch\" \"cross-env ISDEV=YES node server.js\"",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prune": "./prune-gh-pages.sh",
@@ -43,8 +45,10 @@
     "bowser": "1.9.4",
     "chromedriver": "2.41.0",
     "classnames": "2.2.6",
+    "concurrently": "^4.0.1",
     "copy-webpack-plugin": "^4.5.1",
     "core-js": "2.5.7",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "1.1.1",
@@ -129,5 +133,10 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js"
     }
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "open": "0.0.5",
+    "passport": "^0.4.0"
   }
 }
