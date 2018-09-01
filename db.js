@@ -4,11 +4,14 @@ mongoose.connect('mongodb://localhost:27017/data');
 var ScratchProjectSchema = new mongoose.Schema( {
   title: {
       type: String,
-      unique: true,
       required: true
   },
+  owner: {
+    type: String,
+    required: true    
+  },
   data: {
-      type: String
+      type: Buffer
   },
 });
 
@@ -19,13 +22,12 @@ var UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    trim: true
   },
   password: {
     type: String,
     required: true,
   },
-  projects: [[ScratchProjectSchema]]
+  projects: [[String]]
 });
 var User = mongoose.model('User', UserSchema);
 module.exports = { User, ScratchProject };

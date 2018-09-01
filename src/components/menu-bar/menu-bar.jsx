@@ -6,6 +6,8 @@ import bindAll from 'lodash.bindall';
 import React from 'react';
 
 import Signin from '../../containers/signin.jsx';
+import ProjectName from '../../containers/project-name.jsx';
+import NewProject from '../../containers/new-project.jsx';
 import Box from '../box/box.jsx';
 import Button from '../button/button.jsx';
 import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
@@ -239,18 +241,10 @@ class MenuBar extends React.Component {
                                 place={this.props.isRtl ? 'left' : 'right'}
                                 onRequestClose={this.props.onRequestCloseFile}
                             >
-                                <MenuItemTooltip
+                                <NewProject
                                     id="new"
-                                    isRtl={this.props.isRtl}
-                                >
-                                    <MenuItem>
-                                        <FormattedMessage
-                                            defaultMessage="New"
-                                            description="Menu bar item for creating a new project"
-                                            id="gui.menuBar.new"
-                                        />
-                                    </MenuItem>
-                                </MenuItemTooltip>
+                                    isRtl={this.props.isRtl}>
+                                </NewProject>
                                 <MenuSection>
                                     <MenuItemTooltip
                                         id="save"
@@ -367,13 +361,10 @@ class MenuBar extends React.Component {
                     </div>
                     <Divider className={classNames(styles.divider)} />
                     <div className={classNames(styles.menuBarItem)}>
-                        <MenuBarItemTooltip id="title-field">
-                            <input
-                                disabled
+                            <ProjectName
                                 className={classNames(styles.titleField)}
-                                placeholder="Untitled-1"
+                                id="project-name"
                             />
-                        </MenuBarItemTooltip>
                     </div>
                 </div>
                 <div className={classNames(styles.menuBarItem, styles.feedbackButtonWrapper)}>

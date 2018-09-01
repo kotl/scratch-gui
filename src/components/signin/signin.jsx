@@ -21,6 +21,8 @@ class SigninComponent extends React.Component {
             'onOk',
             'onChangeUsername',
             'onChangePassword',
+            'setError',
+            'showError',
         ]);
         this.state = { error: '', username: '', password: '' };
     }
@@ -28,10 +30,12 @@ class SigninComponent extends React.Component {
         let me = this;
         this.setError('');
         if (this.state.username.length === 0) {
+            // TODO: use i18n
             this.setError('Please specify username');
             return;
         }
         if (this.state.password.length === 0) {
+            // TODO: use i18n
             this.setError('Please specify password');
             return;
         }
