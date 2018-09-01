@@ -22,19 +22,47 @@ class SigninComponent extends React.Component {
             'onChangeUsername',
             'onChangePassword',
         ]);
-        this.state = {};
+        this.state = { error: '', username: '', password: '' };
     }
     onOk() {
-            xhr({
+        let me = this;
+        this.setError('');
+        if (this.state.username.length === 0) {
+            this.setError('Please specify username');
+            return;
+        }
+        if (this.state.password.length === 0) {
+            this.setError('Please specify password');
+            return;
+        }
+        xhr({
                 method: 'POST',
-                uri: `/auth?u=${username}&p=${password}`,
+                uri: `/api/login`,
+                body: {
+                    username: this.state.username,
+                    password: this.state.password,
+                },
                 json: true
-            }, (error, response) => {
+            }, (error, response)  => {
                 if (error || response.statusCode !== 200) {
-                    return reject();
+                    me.setError(error ? error : response.body);
+                    return;
+                }
+                if (response.body === 'AUTHENTICATED') {
+                    me.props.onRequestSuccess(me.state.username);
                 }
             });
     }
+
+    setError(message) {
+        this.state.error = message;
+        this.forceUpdate();
+    }
+
+    showError() {
+        return this.state.error != '';
+    }
+
     onCancel() {
         this.props.onRequestClose();
     }
@@ -47,6 +75,7 @@ class SigninComponent extends React.Component {
 
     render () { 
     return (<Modal
+        id='signInDialog'
         className={styles.modalContent}
         contentLabel='Sign in'
         onRequestClose={this.onCancel}
@@ -74,6 +103,10 @@ class SigninComponent extends React.Component {
                     onChange={this.onChangePassword}
                 />
             </Box>
+            {this.showError() ? 
+            (<Box className={styles.error}>
+                {this.state.error}
+            </Box>): null }
             <Box className={styles.buttonRow}>
                 <button
                     className={styles.cancelButton}
@@ -103,6 +136,7 @@ class SigninComponent extends React.Component {
 
 SigninComponent.propTypes = {
     onRequestClose: PropTypes.func.isRequired,
+    onRequestSuccess: PropTypes.func.isRequired,
 };
 
 export default SigninComponent;

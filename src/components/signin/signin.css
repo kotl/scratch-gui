@@ -15,6 +15,12 @@
     margin: 0 0 0.75rem;
 }
 
+.error {
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: #B10000;
+}
+
 .variable-name-text-input {
     margin-bottom: 1.5rem;
     width: 100%;

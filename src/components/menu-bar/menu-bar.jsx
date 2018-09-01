@@ -396,8 +396,9 @@ class MenuBar extends React.Component {
                     </a>
                 </div>
                 <div className={styles.accountInfoWrapper}>
-                        <div
+                      <Button 
                           id="account-nav"
+                          onClick={this.props.onSignin}
                           place={this.props.isRtl ? 'right' : 'left'}
                             className={classNames(
                                 styles.menuBarItem,
@@ -405,14 +406,18 @@ class MenuBar extends React.Component {
                                 styles.accountNavMenu
                             )}
                         >
-                            <span>
-                                {this.props.loggedIn ? 
-                                    (<FormattedMessage>{this.props.username}</FormattedMessage>)
-                                     : (<Button id="gui.menuBar.signin"
-                                     onClick={this.props.onSignin}
-                                     >Sign in</Button>)}
-                            </span>
-                        </div>
+                                     {this.props.username === '' ?
+                                     (<FormattedMessage 
+                                       defaultMessage="Sign in"
+                                       description="Label for login in buton"
+                                       id="gui.menuBar.signin"
+                                       onClick={
+                                         this.props.onSignin
+                                     }
+                                      />) :
+                                      (<span>{this.props.username}</span>)
+                                      }     
+                        </Button>
                 </div>
             </Box>
         );
@@ -425,7 +430,6 @@ MenuBar.propTypes = {
     fileMenuOpen: PropTypes.bool,
     intl: intlShape,
     isRtl: PropTypes.bool,
-    loggedIn: PropTypes.bool,
     username: PropTypes.string,
     languageMenuOpen: PropTypes.bool,
     onClickEdit: PropTypes.func,
@@ -443,7 +447,8 @@ const mapStateToProps = state => ({
     fileMenuOpen: fileMenuOpen(state),
     editMenuOpen: editMenuOpen(state),
     isRtl: state.locales.isRtl,
-    languageMenuOpen: languageMenuOpen(state)
+    languageMenuOpen: languageMenuOpen(state),
+    username: state.scratchGui.profile.username,
 });
 
 const mapDispatchToProps = dispatch => ({

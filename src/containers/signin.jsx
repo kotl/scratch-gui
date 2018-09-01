@@ -15,6 +15,7 @@ class Signin extends React.Component {
         return (
             <SigninComponent
             onRequestClose={this.props.onRequestClose}
+            onRequestSuccess={this.props.onRequestSuccess}
             />
         );
     }
@@ -22,6 +23,7 @@ class Signin extends React.Component {
 
 Signin.propTypes = {
     onRequestClose: PropTypes.func.isRequired,
+    onRequestSuccess: PropTypes.func.isRequired,
 };
 
 export default Signin;

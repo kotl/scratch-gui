@@ -20,6 +20,8 @@ import {
     closeSigninDialog,
 } from '../reducers/modals';
 
+import { setUsername } from '../reducers/profile';
+
 import ProjectLoaderHOC from '../lib/project-loader-hoc.jsx';
 import vmListenerHOC from '../lib/vm-listener-hoc.jsx';
 
@@ -136,6 +138,10 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
     onRequestCloseSigninDialog: () => dispatch(closeSigninDialog()),
+    onRequestSuccessSigninDialog: (username) => {
+        dispatch(closeSigninDialog());
+        dispatch(setUsername(username));
+    }
 });
 
 const ConnectedGUI = connect(

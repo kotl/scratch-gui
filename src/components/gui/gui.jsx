@@ -75,7 +75,8 @@ const GUIComponent = props => {
         onActivateSoundsTab,
         onActivateTab,
         onRequestCloseBackdropLibrary,
-    	onRequestCloseSigninDialog,
+        onRequestCloseSigninDialog,
+        onRequestSuccessSigninDialog,
         onRequestCloseCostumeLibrary,
         onSeeCommunity,
         previewInfoVisible,
@@ -145,6 +146,7 @@ const GUIComponent = props => {
                 {signinDialogVisible ? (
                         <Signin
                         onRequestClose={onRequestCloseSigninDialog}
+                        onRequestSuccess={onRequestSuccessSigninDialog}
                     />): null}
                 {backdropLibraryVisible ? (
                     <BackdropLibrary
@@ -302,6 +304,7 @@ GUIComponent.propTypes = {
     onRequestCloseBackdropLibrary: PropTypes.func,
     onRequestCloseCostumeLibrary: PropTypes.func,
     onRequestCloseSigninDialog: PropTypes.func,
+    onRequestSuccessSigninDialog: PropTypes.func,
     onSeeCommunity: PropTypes.func,
     onTabSelect: PropTypes.func,
     previewInfoVisible: PropTypes.bool,
