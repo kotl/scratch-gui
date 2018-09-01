@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import React from 'react';
 
+import Signin from '../../containers/signin.jsx';
 import Box from '../box/box.jsx';
 import Button from '../button/button.jsx';
 import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
@@ -28,8 +29,13 @@ import {
     editMenuOpen,
     openLanguageMenu,
     closeLanguageMenu,
-    languageMenuOpen
+    languageMenuOpen,
 } from '../../reducers/menus';
+
+import {
+    openSigninDialog,
+    closeSigninDialog,
+} from '../../reducers/modals';
 
 import styles from './menu-bar.css';
 
@@ -138,7 +144,7 @@ class MenuBar extends React.Component {
         bindAll(this, [
             'handleLanguageMouseUp',
             'handleRestoreOption',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
         ]);
     }
     handleLanguageMouseUp (e) {
@@ -369,46 +375,6 @@ class MenuBar extends React.Component {
                             />
                         </MenuBarItemTooltip>
                     </div>
-                    <div className={classNames(styles.menuBarItem)}>
-                        <MenuBarItemTooltip id="share-button">
-                            <Button className={classNames(styles.shareButton)}>
-                                <FormattedMessage
-                                    defaultMessage="Share"
-                                    description="Label for project share button"
-                                    id="gui.menuBar.share"
-                                />
-                            </Button>
-                        </MenuBarItemTooltip>
-                    </div>
-                    <div className={classNames(styles.menuBarItem, styles.communityButtonWrapper)}>
-                        {this.props.enableCommunity ?
-                            <Button
-                                className={classNames(styles.communityButton)}
-                                iconClassName={styles.communityButtonIcon}
-                                iconSrc={communityIcon}
-                                onClick={this.props.onSeeCommunity}
-                            >
-                                <FormattedMessage
-                                    defaultMessage="See Community"
-                                    description="Label for see community button"
-                                    id="gui.menuBar.seeCommunity"
-                                />
-                            </Button> :
-                            <MenuBarItemTooltip id="community-button">
-                                <Button
-                                    className={classNames(styles.communityButton)}
-                                    iconClassName={styles.communityButtonIcon}
-                                    iconSrc={communityIcon}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="See Community"
-                                        description="Label for see community button"
-                                        id="gui.menuBar.seeCommunity"
-                                    />
-                                </Button>
-                            </MenuBarItemTooltip>
-                        }
-                    </div>
                 </div>
                 <div className={classNames(styles.menuBarItem, styles.feedbackButtonWrapper)}>
                     <a
@@ -430,44 +396,23 @@ class MenuBar extends React.Component {
                     </a>
                 </div>
                 <div className={styles.accountInfoWrapper}>
-                    <MenuBarItemTooltip id="mystuff">
                         <div
-                            className={classNames(
-                                styles.menuBarItem,
-                                styles.hoverable,
-                                styles.mystuffButton
-                            )}
-                        >
-                            <img
-                                className={styles.mystuffIcon}
-                                src={mystuffIcon}
-                            />
-                        </div>
-                    </MenuBarItemTooltip>
-                    <MenuBarItemTooltip
-                        id="account-nav"
-                        place={this.props.isRtl ? 'right' : 'left'}
-                    >
-                        <div
+                          id="account-nav"
+                          place={this.props.isRtl ? 'right' : 'left'}
                             className={classNames(
                                 styles.menuBarItem,
                                 styles.hoverable,
                                 styles.accountNavMenu
                             )}
                         >
-                            <img
-                                className={styles.profileIcon}
-                                src={profileIcon}
-                            />
                             <span>
-                                {'scratch-cat' /* @todo username */}
+                                {this.props.loggedIn ? 
+                                    (<FormattedMessage>{this.props.username}</FormattedMessage>)
+                                     : (<Button id="gui.menuBar.signin"
+                                     onClick={this.props.onSignin}
+                                     >Sign in</Button>)}
                             </span>
-                            <img
-                                className={styles.dropdownCaretIcon}
-                                src={dropdownCaret}
-                            />
                         </div>
-                    </MenuBarItemTooltip>
                 </div>
             </Box>
         );
@@ -480,6 +425,8 @@ MenuBar.propTypes = {
     fileMenuOpen: PropTypes.bool,
     intl: intlShape,
     isRtl: PropTypes.bool,
+    loggedIn: PropTypes.bool,
+    username: PropTypes.string,
     languageMenuOpen: PropTypes.bool,
     onClickEdit: PropTypes.func,
     onClickFile: PropTypes.func,
@@ -488,7 +435,8 @@ MenuBar.propTypes = {
     onRequestCloseEdit: PropTypes.func,
     onRequestCloseFile: PropTypes.func,
     onRequestCloseLanguage: PropTypes.func,
-    onSeeCommunity: PropTypes.func
+    onSeeCommunity: PropTypes.func,
+    onSignin: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -506,7 +454,8 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseEdit: () => dispatch(closeEditMenu()),
     onClickLanguage: () => dispatch(openLanguageMenu()),
     onRequestCloseLanguage: () => dispatch(closeLanguageMenu()),
-    onSeeCommunity: () => dispatch(setPlayer(true))
+    onSeeCommunity: () => dispatch(setPlayer(true)),
+    onSignin: () => dispatch(openSigninDialog()),
 });
 
 export default injectIntl(connect(

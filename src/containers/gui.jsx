@@ -16,7 +16,8 @@ import {
 
 import {
     closeCostumeLibrary,
-    closeBackdropLibrary
+    closeBackdropLibrary,
+    closeSigninDialog,
 } from '../reducers/modals';
 
 import ProjectLoaderHOC from '../lib/project-loader-hoc.jsx';
@@ -112,6 +113,7 @@ const mapStateToProps = state => ({
     blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
     cardsVisible: state.scratchGui.cards.visible,
     costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
+    signinDialogVisible: state.scratchGui.modals.signinDialog,
     costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
     importInfoVisible: state.scratchGui.modals.importInfo,
     isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
@@ -132,7 +134,8 @@ const mapDispatchToProps = dispatch => ({
     onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
-    onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary())
+    onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
+    onRequestCloseSigninDialog: () => dispatch(closeSigninDialog()),
 });
 
 const ConnectedGUI = connect(

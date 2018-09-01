@@ -15,6 +15,7 @@ import CostumeTab from '../../containers/costume-tab.jsx';
 import TargetPane from '../../containers/target-pane.jsx';
 import SoundTab from '../../containers/sound-tab.jsx';
 import StageWrapper from '../../containers/stage-wrapper.jsx';
+import Signin from '../../containers/signin.jsx';
 import Loader from '../loader/loader.jsx';
 import Box from '../box/box.jsx';
 import MenuBar from '../menu-bar/menu-bar.jsx';
@@ -60,6 +61,7 @@ const GUIComponent = props => {
         cardsVisible,
         children,
         costumeLibraryVisible,
+	    signinDialogVisible,
         costumesTabVisible,
         enableCommunity,
         hideIntro,
@@ -73,6 +75,7 @@ const GUIComponent = props => {
         onActivateSoundsTab,
         onActivateTab,
         onRequestCloseBackdropLibrary,
+    	onRequestCloseSigninDialog,
         onRequestCloseCostumeLibrary,
         onSeeCommunity,
         previewInfoVisible,
@@ -139,6 +142,10 @@ const GUIComponent = props => {
                         onRequestClose={onRequestCloseCostumeLibrary}
                     />
                 ) : null}
+                {signinDialogVisible ? (
+                        <Signin
+                        onRequestClose={onRequestCloseSigninDialog}
+                    />): null}
                 {backdropLibraryVisible ? (
                     <BackdropLibrary
                         vm={vm}
@@ -294,6 +301,7 @@ GUIComponent.propTypes = {
     onExtensionButtonClick: PropTypes.func,
     onRequestCloseBackdropLibrary: PropTypes.func,
     onRequestCloseCostumeLibrary: PropTypes.func,
+    onRequestCloseSigninDialog: PropTypes.func,
     onSeeCommunity: PropTypes.func,
     onTabSelect: PropTypes.func,
     previewInfoVisible: PropTypes.bool,

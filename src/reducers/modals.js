@@ -15,7 +15,7 @@ const MODAL_SPRITE_LIBRARY = 'spriteLibrary';
 const MODAL_SOUND_RECORDER = 'soundRecorder';
 
 const MODAL_TIPS_LIBRARY = 'tipsLibrary';
-
+const MODAL_SIGNIN = 'signinDialog';
 
 const initialState = {
     [MODAL_BACKDROP_LIBRARY]: false,
@@ -28,7 +28,8 @@ const initialState = {
     [MODAL_SOUND_LIBRARY]: false,
     [MODAL_SPRITE_LIBRARY]: false,
     [MODAL_SOUND_RECORDER]: false,
-    [MODAL_TIPS_LIBRARY]: false
+    [MODAL_TIPS_LIBRARY]: false,
+    [MODAL_SIGNIN]: false,
 };
 
 const reducer = function (state, action) {
@@ -57,6 +58,9 @@ const closeModal = function (modal) {
         type: CLOSE_MODAL,
         modal: modal
     };
+};
+const openSigninDialog = function () {
+  return openModal(MODAL_SIGNIN);
 };
 const openBackdropLibrary = function () {
     analytics.pageview('/libraries/backdrops');
@@ -102,6 +106,9 @@ const openTipsLibrary = function () {
     analytics.pageview('/modals/tips');
     return openModal(MODAL_TIPS_LIBRARY);
 };
+const closeSigninDialog = function () {
+  return closeModal(MODAL_SIGNIN);
+};
 const closeBackdropLibrary = function () {
     return closeModal(MODAL_BACKDROP_LIBRARY);
 };
@@ -145,6 +152,7 @@ export {
     openImportInfo,
     openLoadingProject,
     openPreviewInfo,
+    openSigninDialog,
     openSoundLibrary,
     openSpriteLibrary,
     openSoundRecorder,
@@ -156,6 +164,7 @@ export {
     closeImportInfo,
     closeLoadingProject,
     closePreviewInfo,
+    closeSigninDialog,
     closeSpriteLibrary,
     closeSoundLibrary,
     closeSoundRecorder,
