@@ -1,15 +1,17 @@
 var express = require('express');
 var path = require('path');
 var open = require('open');
-var db = require('./db');
+var fs = require('fs');
 var passwordHash = require('password-hash');
+var passport = require('passport')
+, LocalStrategy = require('passport-local').Strategy;
+
+var db = require('./db');
 
 const User = db.User;
 const ScratchProject = db.ScratchProject;
 
 const app = express();
-var passport = require('passport')
-, LocalStrategy = require('passport-local').Strategy;
 
 const isDev = process.env.ISDEV;
 
@@ -17,6 +19,7 @@ var session = require("express-session"),
 bodyParser = require("body-parser");
 
 app.use(express.static('build'));
+app.use('/projects', express.static('projects'));
 app.use(session({ secret: 'csfirst-offline' }));
 app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 app.use(bodyParser.json());
@@ -148,6 +151,17 @@ app.post('/api/load',
           done('Wrong owner');
         }
     });
+});
+
+app.get('/api/template/:id', 
+  function(req, res, done) {
+    const id = req.params.id;
+    const path = id + "/index.sb2";
+    res.contentType("application/zip");
+    let nameContent = fs.readFileSync('projects/' + id + '/name.txt', 'utf8'); 
+    console.log("Name content:" + nameContent);
+    res.header('project-title', nameContent.replace('\r','').replace('\n',''));
+    res.sendfile(path, {root: './projects'});
 });
 
 app.post('/api/list', 
