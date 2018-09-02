@@ -10,8 +10,6 @@ import Modal from '../../containers/modal.jsx';
 import styles from './signin.css';
 import xhr from 'xhr';
 
-import dropdownIcon from './icon--dropdown-caret.svg';
-
 class SigninComponent extends React.Component {
 
     constructor (props) {
