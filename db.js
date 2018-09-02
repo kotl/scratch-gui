@@ -2,10 +2,6 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/data');
 
 var ScratchProjectSchema = new mongoose.Schema( {
-  title: {
-      type: String,
-      required: true
-  },
   owner: {
     type: String,
     required: true    
@@ -15,7 +11,18 @@ var ScratchProjectSchema = new mongoose.Schema( {
   },
 });
 
-var ScratchProject = mongoose.model('ScratchProject', ScratchProjectSchema);
+var ProjectInfoSchema = new mongoose.Schema( {
+  title: {
+      type: String,
+      required: true
+  },
+  projectId: {
+      type: String,
+      required: true    
+  }
+});
+
+var ScratchProject = mongoose.model('Project', ScratchProjectSchema);
 
 var UserSchema = new mongoose.Schema({
   username: {
@@ -27,7 +34,7 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  projects: [[String]]
+  projects: [ProjectInfoSchema]
 });
 var User = mongoose.model('User', UserSchema);
 module.exports = { User, ScratchProject };

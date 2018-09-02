@@ -18,12 +18,14 @@ bodyParser = require("body-parser");
 
 app.use(express.static('build'));
 app.use(session({ secret: 'csfirst-offline' }));
+app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user._id);
   });
   
 passport.deserializeUser(function(id, done) {
@@ -66,18 +68,91 @@ app.post('/api/login',
     res.send('AUTHENTICATED');
   });
 
+function projectMap(projects) {
+  return projects.reduce(function (o, v) {
+     o[v.projectId] = v;
+     return o
+    }, {})
+}
+
+function saveUserProjects(req, res, pm, id, done) {
+    req.user.projects = Object.keys(pm).map(id => pm[id]);
+    req.user.save((err) => {
+      if (!err) {
+        res.send({ id: id, result: 'OK' });
+      } else {
+        done('Can not convert list of projects');
+      }
+    });
+}
+
 app.post('/api/save', 
-  passport.authenticate('local', { failureRedirect: '/api/login' }),
-  function(req, res) {
-    console.log("Saving: "+ req);
-    res.send('NOPE');
+  function(req, res, done) {
+    if (!req.user) {
+      return done('User not found');
+    }
+    let id = req.query.id;
+    const title = req.query.title ? req.query.title : 'Untitled';
+    const data = req.body;
+    const pm = projectMap(req.user.projects);
+    if (!id || !pm[id]) {
+      console.log("Id or project not found");
+      ScratchProject.create(
+        {owner: req.user.username, data: data},
+        (err, project) => {
+          if (err) {
+            return done('Can not create project');
+          }
+            id = String(project._id);
+            pm[id] = {
+              title: title,
+              projectId: id,
+            }
+            console.log("New id created:" + id);
+            return saveUserProjects(req,res,pm, id, done);
+        }
+      );
+    } else {
+      console.log("Id already exists");
+      pm[id].title = title;
+      ScratchProject.findById(id, (err, project) => {
+        if (err) {
+          return next('Can not find project by id');
+        }
+        project.data = data;
+        project.save((err) => {
+        if (err) {
+          return done('Can not save project');
+        }
+        return saveUserProjects(req,res,pm, id, done);
+      });
+
+      });
+    }
   });
 
 app.post('/api/load', 
-  passport.authenticate('local', { failureRedirect: '/api/login' }),
+  function(req, res, done) {
+    if (!req.user) {
+      return done('User not found');
+    }
+    const id = req.query.id;
+    ScratchProject.findById(id, (err, project) => {
+        if (err) {
+          return next('Can not find project by id');
+        }
+        if (project.owner == req.user.username) {
+          res.contentType("application/zip");
+          res.send(project.data);
+        } else {
+          done('Wrong owner');
+        }
+    });
+});
+
+app.post('/api/list', 
   function(req, res) {
-    console.log("Loading: "+ req);
-    res.send('NOPE');
+    res.send({ projects: req.user.projects, result: 'OK'});
 });
 
 const port = (isDev === 'YES') ? 3000 : 80;
