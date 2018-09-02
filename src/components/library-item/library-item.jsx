@@ -55,7 +55,7 @@ class LibraryItem extends React.PureComponent {
                 )}
                 onClick={this.handleClick}
             >
-                <div className={styles.featuredImageContainer}>
+                {this.props.iconURL? (<div className={styles.featuredImageContainer}>
                     {this.props.disabled ? (
                         <div className={styles.comingSoonText}>
                             <FormattedMessage
@@ -69,7 +69,7 @@ class LibraryItem extends React.PureComponent {
                         className={styles.featuredImage}
                         src={this.props.iconURL}
                     />
-                </div>
+                  </div>) : null}
                 <div
                     className={styles.featuredText}
                 >
@@ -91,14 +91,14 @@ class LibraryItem extends React.PureComponent {
                 onMouseLeave={this.handleMouseLeave}
             >
                 {/* Layers of wrapping is to prevent layout thrashing on animation */}
-                <Box className={styles.libraryItemImageContainerWrapper}>
+                {this.props.iconURL? (<Box className={styles.libraryItemImageContainerWrapper}>
                     <Box className={styles.libraryItemImageContainer}>
                         <img
                             className={styles.libraryItemImage}
                             src={this.props.iconURL}
                         />
                     </Box>
-                </Box>
+                </Box>): null}
                 <span className={styles.libraryItemName}>{this.props.name}</span>
             </Box>
         );
@@ -112,7 +112,7 @@ LibraryItem.propTypes = {
     ]),
     disabled: PropTypes.bool,
     featured: PropTypes.bool,
-    iconURL: PropTypes.string.isRequired,
+    iconURL: PropTypes.string,
     id: PropTypes.number.isRequired,
     name: PropTypes.oneOfType([
         PropTypes.string,
