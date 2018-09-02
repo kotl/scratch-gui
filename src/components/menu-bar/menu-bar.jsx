@@ -14,9 +14,11 @@ import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
 import Divider from '../divider/divider.jsx';
 import LanguageSelector from '../../containers/language-selector.jsx';
 import ProjectLoader from '../../containers/project-loader.jsx';
+import ProjectWebLoader from '../../containers/project-web-loader.jsx';
 import Menu from '../../containers/menu.jsx';
 import {MenuItem, MenuSection} from '../menu/menu.jsx';
 import ProjectSaver from '../../containers/project-saver.jsx';
+import ProjectWebSaver from '../../containers/project-web-saver.jsx';
 import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
 
@@ -246,29 +248,44 @@ class MenuBar extends React.Component {
                                     isRtl={this.props.isRtl}>
                                 </NewProject>
                                 <MenuSection>
-                                    <MenuItemTooltip
+                                  <ProjectWebLoader
+                                  >
+                                  </ProjectWebLoader>
+                                    </MenuSection>
+                                    <MenuSection>
+                                    <ProjectWebSaver
                                         id="save"
                                         isRtl={this.props.isRtl}
-                                    >
-                                        <MenuItem>
+                                        useNewProjectId={false}
+                                    >{(saveProject, saveProps) => (
+                                        <MenuItem
+                                            onClick={saveProject}
+                                            {...saveProps}
+                                        >
                                             <FormattedMessage
                                                 defaultMessage="Save now"
                                                 description="Menu bar item for saving now"
                                                 id="gui.menuBar.saveNow"
                                             />
                                         </MenuItem>
-                                    </MenuItemTooltip>
-                                    <MenuItemTooltip
+                                    )}</ProjectWebSaver>
+                                    
+                                    <ProjectWebSaver
                                         id="copy"
                                         isRtl={this.props.isRtl}
-                                    >
-                                        <MenuItem>
+                                        useNewProjectId={true}
+                                    >{(saveProject, saveProps) => (
+                                        <MenuItem
+                                            onClick={saveProject}
+                                            {...saveProps}
+                                        >
                                             <FormattedMessage
-                                                defaultMessage="Save as a copy"
-                                                description="Menu bar item for saving as a copy"
-                                                id="gui.menuBar.saveAsCopy"
-                                            /></MenuItem>
-                                    </MenuItemTooltip>
+                                            defaultMessage="Save as a copy"
+                                            description="Menu bar item for saving as a copy"
+                                            id="gui.menuBar.saveAsCopy"
+                                        />
+                                        </MenuItem>
+                                    )}</ProjectWebSaver>
                                 </MenuSection>
                                 <MenuSection>
                                     <ProjectLoader>{(renderFileInput, loadProject, loadProps) => (

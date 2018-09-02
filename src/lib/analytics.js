@@ -1,10 +1,11 @@
-import GoogleAnalytics from 'react-ga';
+const defaultMock = {
+    pageview: () => {},
+    event: () => {},
+}
 
-GoogleAnalytics.initialize(process.env.GA_ID, {
-    debug: (process.env.NODE_ENV !== 'production'),
-    titleCase: true,
-    sampleRate: (process.env.NODE_ENV === 'production') ? 100 : 0,
-    forceSSL: true
-});
+const GoogleAnalyticsMock = {
+    default: defaultMock,
+    ...defaultMock,
+}
 
-export default GoogleAnalytics;
+export default GoogleAnalyticsMock;

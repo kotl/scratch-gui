@@ -18,6 +18,7 @@ import {
     closeCostumeLibrary,
     closeBackdropLibrary,
     closeSigninDialog,
+    closeProgressDialog,
 } from '../reducers/modals';
 
 import { setUsername } from '../reducers/profile';
@@ -127,7 +128,11 @@ const mapStateToProps = state => ({
         state.scratchGui.targets.stage.id === state.scratchGui.targets.editingTarget
     ),
     soundsTabVisible: state.scratchGui.editorTab.activeTabIndex === SOUNDS_TAB_INDEX,
-    tipsLibraryVisible: state.scratchGui.modals.tipsLibrary
+    tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
+    projectLibraryVisible: state.scratchGui.modals.projectLibrary,
+    progressDialogVisible: state.scratchGui.modals.progress,
+    progressDescription: state.scratchGui.profile.progressDescription,
+    progressError: state.scratchGui.profile.progressError,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -137,6 +142,7 @@ const mapDispatchToProps = dispatch => ({
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
+    onRequestCloseProgress: () => dispatch(closeProgressDialog()),
     onRequestCloseSigninDialog: () => dispatch(closeSigninDialog()),
     onRequestSuccessSigninDialog: (username) => {
         dispatch(closeSigninDialog());

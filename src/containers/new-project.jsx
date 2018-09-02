@@ -7,6 +7,11 @@ import {MenuItem, MenuSection} from '../components/menu/menu.jsx';
 import projectJson from '../lib/default-project/project.json';
 
 import {
+    setProjectName,
+    setProjectId
+} from '../reducers/profile';
+  
+import {
     closeFileMenu,
 } from '../reducers/menus';
 
@@ -19,6 +24,8 @@ class NewProject extends React.Component {
     }
     onClick() {
         this.props.closeFileMenu();        
+        this.props.setProjectId('');
+        this.props.setProjectName('');
         this.props.vm.loadProject(projectJson);
     }
     render () {
@@ -47,6 +54,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closeFileMenu: () => dispatch(closeFileMenu()),
+    setProjectName: (projectName) => dispatch(setProjectName(projectName)),
+    setProjectId: (id) => dispatch(setProjectName(id)),
 });
 
 export default connect(

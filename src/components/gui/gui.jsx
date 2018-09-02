@@ -27,8 +27,10 @@ import PreviewModal from '../../containers/preview-modal.jsx';
 import ImportModal from '../../containers/import-modal.jsx';
 import WebGlModal from '../../containers/webgl-modal.jsx';
 import TipsLibrary from '../../containers/tips-library.jsx';
+import ProjectLibrary from '../../containers/project-library.jsx';
 import Cards from '../../containers/cards.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
+import Progress from '../../containers/progress.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -78,12 +80,17 @@ const GUIComponent = props => {
         onRequestCloseSigninDialog,
         onRequestSuccessSigninDialog,
         onRequestCloseCostumeLibrary,
+        onRequestCloseProgress,
         onSeeCommunity,
         previewInfoVisible,
         targetIsStage,
         soundsTabVisible,
         stageSizeMode,
         tipsLibraryVisible,
+        projectLibraryVisible,
+        progressDialogVisible,
+        progressDescription,
+        progressError,
         vm,
         ...componentProps
     } = omit(props, 'dispatch');
@@ -133,6 +140,14 @@ const GUIComponent = props => {
                 )}
                 {tipsLibraryVisible ? (
                     <TipsLibrary />
+                ) : null}
+                {projectLibraryVisible ? (
+                    <ProjectLibrary />
+                ) : null}
+                {progressDialogVisible ? (
+                    <Progress progressDescription={progressDescription} progressError={progressError} 
+                     onRequestClose={onRequestCloseProgress}
+                    />
                 ) : null}
                 {cardsVisible ? (
                     <Cards />
@@ -305,6 +320,7 @@ GUIComponent.propTypes = {
     onRequestCloseCostumeLibrary: PropTypes.func,
     onRequestCloseSigninDialog: PropTypes.func,
     onRequestSuccessSigninDialog: PropTypes.func,
+    onRequestCloseProgress: PropTypes.func,
     onSeeCommunity: PropTypes.func,
     onTabSelect: PropTypes.func,
     previewInfoVisible: PropTypes.bool,
@@ -312,6 +328,10 @@ GUIComponent.propTypes = {
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
     targetIsStage: PropTypes.bool,
     tipsLibraryVisible: PropTypes.bool,
+    projectLibraryVisible: PropTypes.bool,
+    progressDialogVisible: PropTypes.bool,
+    progressDescription: PropTypes.string,
+    progressError: PropTypes.string,
     vm: PropTypes.instanceOf(VM).isRequired
 };
 GUIComponent.defaultProps = {
@@ -325,7 +345,8 @@ GUIComponent.defaultProps = {
 
 const mapStateToProps = state => ({
     // This is the button's mode, as opposed to the actual current state
-    stageSizeMode: state.scratchGui.stageSize.stageSize
+    stageSizeMode: state.scratchGui.stageSize.stageSize,
+    hideIntro: true,
 });
 
 export default injectIntl(connect(
