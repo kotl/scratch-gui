@@ -17,3 +17,9 @@ npm-*
 # generated translation files
 /translations
 /locale
+/data
+/assets/*.svg
+/assets/*.wav
+/assets/*.png
+
+

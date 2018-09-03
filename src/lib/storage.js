@@ -38,7 +38,7 @@ class Storage extends ScratchStorage {
         this.assetHost = assetHost;
     }
     getAssetURL (asset) {
-        return `${this.assetHost}/internalapi/asset/${asset.assetId}.${asset.dataFormat}/get/`;
+        return `/assets/${asset.assetId}.${asset.dataFormat}`;
     }
 }
 
