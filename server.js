@@ -170,7 +170,7 @@ app.post('/api/list',
     res.send({ projects: req.user.projects, result: 'OK'});
 });
 
-const port = (isDev === 'YES') ? 3000 : 80;
+const port = (isDev === 'YES') ? 3000 : 3000;
 
 app.listen(port, function (error) {
     if(error) {
