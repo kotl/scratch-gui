@@ -28,7 +28,11 @@
   },
   "peerDependencies": {
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "ajv": "^6.0.0",
+    "eslint": "^4.0",
+    "react-intl-redux": "^0.7",
+    "react-responsive": "^4"
   },
   "devDependencies": {
     "arraybuffer-loader": "^1.0.6",
