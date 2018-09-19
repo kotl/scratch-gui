@@ -19,7 +19,7 @@ var session = require("express-session"),
     bodyParser = require("body-parser");
 
 app.use(express.static('build'));
-app.use('/projects', express.static('projects'));
+app.use('/projects', express.static('../projects'));
 app.use('/assets', express.static('assets'));
 app.use(session({ secret: 'csfirst-offline' }));
 app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
