@@ -29,7 +29,6 @@
   "peerDependencies": {
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "ajv": "^6.0.0",
     "eslint": "^4.0",
     "react-intl-redux": "^0.7",
     "react-responsive": "^4"
@@ -138,6 +137,7 @@
   },
   "dependencies": {
     "ajv": "^6.5.3",
+    "ajv-keywords": "^3.2.0",
     "bson": "^3.0.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
