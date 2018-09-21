@@ -2,6 +2,9 @@ var express = require('express');
 var path = require('path');
 var open = require('open');
 var fs = require('fs');
+var querystring = require('querystring');
+
+
 var passwordHash = require('password-hash');
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
@@ -27,6 +30,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);
@@ -177,6 +185,18 @@ app.get('/api/template/:id',
 app.post('/api/list',
     function (req, res) {
         res.send({ projects: req.user.projects, result: 'OK' });
+    });
+
+app.get('/cgi/:mime/:site/:path',
+    function (req, res, done) {
+        const site = req.params.site;
+        const mime = req.params.mime.replace('_', '/');
+        const path = req.params.path;
+        var params = querystring.stringify(req.query);
+        console.log(`site: ${site}, mime: ${mime}, path: ${path}, params: ${params}`);
+        res.contentType(mime);
+        const filename = `${site}/${path}?${params}`;
+        res.sendfile(filename, { root: '../www/cs' } );
     });
 
 var port = 3000;
