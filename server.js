@@ -200,7 +200,7 @@ app.get('/cgi/:mime/:site/:path',
 
 app.get('/projects/:id',
     function (req, res, done) {
-	res.redirect('/#project' + req.params.id');
+	res.redirect('/#project' + req.params.id);
     });
 
 var port = 3000;
