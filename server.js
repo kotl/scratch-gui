@@ -191,7 +191,8 @@ app.get('/cgi/:mime/:site/:path',
         const site = req.params.site;
         const mime = req.params.mime.replace('_', '/');
         const path = req.params.path;
-        var params = querystring.stringify(req.query);
+        var params = decodeURI(querystring.stringify(req.query));
+        params = params.replace(/ /g, '+');
         console.log(`site: ${site}, mime: ${mime}, path: ${path}, params: ${params}`);
         res.contentType(mime);
         const filename = `${site}/${path}?${params}`;
