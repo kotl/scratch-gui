@@ -50,9 +50,21 @@ class SigninComponent extends React.Component {
                     me.setError(error ? error : response.body);
                     return;
                 }
-                if (response.body === 'AUTHENTICATED') {
-                    me.props.onRequestSuccess(me.state.username);
+                try{
+                    let result = response.body;
+                    if (result.result === 'AUTHENTICATED') {
+                        if (result.created == true) {
+                            // TODO: i18n
+                            this.setError("New user was created. Please remember this user/password next time.");
+                            setTimeout( () => {
+                                me.props.onRequestSuccess(me.state.username);
+                            }, 4000);
+                        } else {
+                          me.props.onRequestSuccess(me.state.username);
+                        }
+                    }
                 }
+                catch(e) { console.log(e); }
             });
     }
 
@@ -75,7 +87,7 @@ class SigninComponent extends React.Component {
         this.state.password = e.target.value;
     }
 
-    render () { 
+    render () {
     return (<Modal
         id='signInDialog'
         className={styles.modalContent}
@@ -105,7 +117,7 @@ class SigninComponent extends React.Component {
                     onChange={this.onChangePassword}
                 />
             </Box>
-            {this.showError() ? 
+            {this.showError() ?
             (<Box className={styles.error}>
                 {this.state.error}
             </Box>): null }
