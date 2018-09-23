@@ -22,7 +22,6 @@ var session = require("express-session"),
     bodyParser = require("body-parser");
 
 app.use(express.static('build'));
-app.use('/projects', express.static('../projects'));
 app.use('/assets', express.static('assets'));
 app.use(session({ secret: 'csfirst-offline' }));
 app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
@@ -197,6 +196,11 @@ app.get('/cgi/:mime/:site/:path',
         res.contentType(mime);
         const filename = `${site}/${path}?${params}`;
         res.sendfile(filename, { root: '../www/cs' } );
+    });
+
+app.get('/projects/:id',
+    function (req, res, done) {
+	res.redirect('/#project' + req.params.id');
     });
 
 var port = 3000;
