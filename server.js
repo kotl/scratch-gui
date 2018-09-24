@@ -4,6 +4,7 @@ var open = require('open');
 var fs = require('fs');
 var querystring = require('querystring');
 
+var projectsPath = '../projects/';
 
 var passwordHash = require('password-hash');
 var passport = require('passport')
@@ -175,10 +176,10 @@ app.get('/api/template/:id',
         const id = req.params.id;
         const path = id + "/index.sb2";
         res.contentType("application/zip");
-        let nameContent = fs.readFileSync('projects/' + id + '/name.txt', 'utf8');
+        let nameContent = fs.readFileSync(projectsPath + id + '/name.txt', 'utf8');
         console.log("Name content:" + nameContent);
         res.header('project-title', nameContent.replace('\r', '').replace('\n', ''));
-        res.sendfile(path, { root: './projects' });
+        res.sendfile(path, { root: projectsPath });
     });
 
 app.post('/api/list',
