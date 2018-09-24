@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec npm run serve-prod
+exec node server.js
