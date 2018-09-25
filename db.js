@@ -1,40 +1,51 @@
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/data');
+const Sequelize = require('sequelize');
+const fs = require('fs');
+if (!fs.existsSync('./data')) {
+  fs.mkdirSync('./data');
+}
 
-var ScratchProjectSchema = new mongoose.Schema( {
-  owner: {
-    type: String,
-    required: true    
-  },
-  data: {
-      type: Buffer
-  },
+const sequelize = new Sequelize('database', 'username', 'password', {
+    dialect: 'sqlite',
+    storage: './data/db.sqlite',
 });
 
-var ProjectInfoSchema = new mongoose.Schema( {
-  title: {
-      type: String,
-      required: true
-  },
-  projectId: {
-      type: String,
-      required: true    
-  }
+const ScratchProject = sequelize.define('scratchproject', {
+    owner: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    data: {
+        type: Sequelize.BLOB
+    },
+    projectId: {
+        primaryKey: true,
+        type: Sequelize.INTEGER, autoIncrement: true
+    }
 });
 
-var ScratchProject = mongoose.model('Project', ScratchProjectSchema);
-
-var UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  projects: [ProjectInfoSchema]
+const User = sequelize.define('user', {
+    username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: 'compositeIndex',
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER, autoIncrement: true
+    },
+    projects:
+    {
+        defaultValue: [],
+        type: Sequelize.JSON,
+    }
 });
-var User = mongoose.model('User', UserSchema);
+
+User.sync();
+ScratchProject.sync();
+
 module.exports = { User, ScratchProject };
+
