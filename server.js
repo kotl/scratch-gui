@@ -46,38 +46,55 @@ passport.deserializeUser(function (id, done) {
         .catch((err) => done(err));
 });
 
-function userFound(user, username, password, done) {
+var regexUsername = /^[a-zA-Z]\w+$/;
+
+function userFound(req, user, username, password, done) {
     if (!user) {
         var hashedPassword = passwordHash.generate(password, {});
+        if (username.length < 4 || password.length < 4) {
+            req.autherror = 'Username / password must contain at least 4 letters.';
+            return done(null, false);
+        }
+        if (!username.match(regexUsername)) {
+            req.autherror = 'Username must contain only alpha numeric characters and start with a letter';
+            return done(null, false);
+        }
         return User.create({ username, password: hashedPassword })
             .then((user) => done(null, Object.assign(user, { created: true })))
             .catch((err) => done(err));
     } else {
         if (!passwordHash.verify(password, user.password)) {
-            return done(null, false, { message: 'Incorrect password.' });
+            req.autherror = 'Incorrect password';
+            return done(null, false);
         }
         return done(null, user);
     }
 }
 
-passport.use(new LocalStrategy(
-    function (username, password, done) {
+passport.use(new LocalStrategy({passReqToCallback: true},
+    function (req, username, password, done) {
         User.findOne({ where: { username: username } })
-            .then((user) => userFound(user, username, password, done))
+            .then((user) => userFound(req, user, username, password, done))
             .catch((err) => {
-                console.log("Can not find user:" + err);
-                done(err);
+                req.autherror = 'Can not find user';
+                return done(null, false);
             });
     }
 ));
 
 app.post('/api/login',
-    passport.authenticate('local', {}),
+    passport.authenticate('local', { failWithError: true }),
     function (req, res) {
         var username = req.user.username;
         var created = (typeof (req.user.created) != 'undefined' && req.user.created == true);
         res.send({ result: 'AUTHENTICATED', user: username, created: created });
-    });
+    },
+    function(err, req, res, next) {
+        if (err.name === 'AuthenticationError' && req.autherror) {
+            res.status(401).send(req.autherror);
+        }
+      }
+    );
 
 function projectMap(projects) {
     return projects.reduce(function (o, v) {
