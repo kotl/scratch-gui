@@ -1,0 +1,30 @@
+
+.user {
+  height: 60px;
+}
+
+.button {
+  margin-right:10px;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.buttonRight {
+  margin-left:50px;
+}
+
+table {
+  align-self: center;
+}
+
+.td-min-width {
+  min-width: 60px;
+}
+
+td {
+  text-align: left;
+  margin: 20px;
+  min-width: 200px;
+}

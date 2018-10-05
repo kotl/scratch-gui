@@ -1,0 +1,80 @@
+<mat-card class="full-width">
+    <mat-card-title class="left-align">Users
+        <button mat-icon-button (click)="getUsers()"
+        matTooltip="Refresh"
+        >
+            <mat-icon>refresh</mat-icon>
+        </button>
+
+
+    </mat-card-title>
+    <mat-card-content>
+        <table mat-table [dataSource]="users" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="td-min-width">
+                    <mat-checkbox (change)="selectAll()"
+                    ></mat-checkbox>
+                 </th>
+                <td mat-cell *matCellDef="let element" class="td-min-width">
+                    <mat-checkbox [(ngModel)]="element.checked"
+                    *ngIf="element.username!='admin'"
+                    ></mat-checkbox>
+                </td>
+              </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  User
+               </th>
+              <td mat-cell *matCellDef="let element" >
+                    {{element.username}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="count">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Projects
+                </th>
+                <td mat-cell *matCellDef="let element" >
+                  {{element.projects.length}}
+                    <button mat-icon-button (click)="onBrowseProjects(element)"
+                    matTooltip="Browse projects of this user"
+                    >
+                        <mat-icon>open_in_browser</mat-icon>
+                    </button>
+              </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions
+                      <button mat-icon-button (click)="onDeleteAll()"
+
+                      matTooltip="Delete all selected users and their projects"
+                      >
+                          <mat-icon>delete</mat-icon>
+                      </button>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                      <button mat-icon-button (click)="onChangePassword(element)"
+                      matTooltip="Change password"
+                      >
+                          <mat-icon>lock</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="onDelete(element)"
+                      matTooltip="Delete user and their projects"
+                       *ngIf="element.username != 'admin'"
+                      >
+                          <mat-icon>delete</mat-icon>
+                      </button>
+                </td>
+                </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="['select','name', 'count','action']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['select','name','count', 'action'];" class="user"></tr>
+          </table>
+    </mat-card-content>
+<mat-error *ngIf="!!error">
+{{error}}
+</mat-error>
+</mat-card>

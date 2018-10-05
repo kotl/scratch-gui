@@ -1,0 +1,41 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+<mat-toolbar class="toolbar">
+  <span>CS First Admin</span>
+</mat-toolbar>
+  <div *ngIf="state === 'LOGGED_IN'" class="container">
+    <app-users [state]="state"></app-users>
+  </div>
+  <div *ngIf="state === 'NOT_LOGGED_IN'" class="container">
+      <mat-card class="form form-padding">
+          <mat-card-header>
+                      <mat-card-title>Please login</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form>
+      <mat-form-field class="field" >
+          <mat-label>Admin password</mat-label>
+        <input matInput type="password" placeholder="Initial password is 'admin'"
+        name="password"
+        [(ngModel)]="password"
+         >
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="field"
+      (click)="onClick()"
+      >Login</button>
+    </form>
+    <mat-error *ngIf="!!error">
+      {{error}}
+    </mat-error>
+    </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div *ngIf="state === 'PASSWORD_CHANGE_NEEDED'" class="container">
+      <app-changepwd class="form-padding"
+      (onPasswordChanged)="onPasswordChanged()"
+        username="admin"
+        title="Please change password immediately"
+      ></app-changepwd>
+  </div>
+</div>

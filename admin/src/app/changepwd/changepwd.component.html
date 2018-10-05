@@ -1,0 +1,26 @@
+<mat-card class="form">
+    <mat-card-title>{{title}}</mat-card-title>
+      <form >
+<mat-form-field class="field" >
+    <mat-label>New password</mat-label>
+  <input matInput type="password"
+  name="newpassword"
+  [(ngModel)]="newpassword"
+   >
+</mat-form-field>
+<mat-form-field class="field" >
+    <mat-label>Confirm password</mat-label>
+  <input matInput type="password"
+  name="confirmpassword"
+  [(ngModel)]="confirmpassword"
+   >
+</mat-form-field>
+<br>
+<button mat-raised-button color="primary" class="field"
+(click)="onChangePwd()"
+>Change password</button>
+</form>
+<mat-error *ngIf="!!error" class="field">
+{{error}}
+</mat-error>
+</mat-card>

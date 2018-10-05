@@ -24,6 +24,7 @@ var session = require("express-session"),
 
 app.use(express.static('build'));
 app.use('/assets', express.static('assets'));
+app.use('/admin', express.static('admin/dist/admin'));
 app.use(session({ secret: 'csfirst-offline' }));
 app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 app.use(bodyParser.json());
@@ -50,6 +51,17 @@ var regexUsername = /^[a-zA-Z]\w+$/;
 
 function userFound(req, user, username, password, done) {
     if (!user) {
+        // If user is not found, we automatically create it.
+        if (username === 'admin') {
+            // This is a special case when admin is logging in for the first time
+            // and we need to create admin user automatically using DEFAULT password.
+            // This avoids the case if someone uses admin user from scratch directly.
+            if (password !== 'admin') {
+                req.autherror = 'Incorrect password';
+                return done(null, false);
+            }
+            password = 'admin';
+        }
         var hashedPassword = passwordHash.generate(password, {});
         if (username.length < 4 || password.length < 4) {
             req.autherror = 'Username / password must contain at least 4 letters.';
@@ -95,6 +107,7 @@ app.post('/api/login',
         }
       }
     );
+
 
 function projectMap(projects) {
     return projects.reduce(function (o, v) {
@@ -194,7 +207,6 @@ app.get('/api/template/:id',
         const path = id + "/index.sb2";
         res.contentType("application/zip");
         let nameContent = fs.readFileSync(projectsPath + id + '/name.txt', 'utf8');
-        console.log("Name content:" + nameContent);
         res.header('project-title', nameContent.replace('\r', '').replace('\n', ''));
         res.sendfile(path, { root: projectsPath });
     });
@@ -202,6 +214,20 @@ app.get('/api/template/:id',
 app.post('/api/list',
     function (req, res) {
         res.send({ projects: req.user.projects, result: 'OK' });
+    });
+
+app.post('/api/users',
+    function (req, res, done) {
+        if (!req.user || req.user.username !== 'admin') {
+            return done('Not admin');
+        }
+        User.findAll({ offset: req.query.offset, limit: 1000 }).then(
+            (users) => {
+                users.forEach((user) => {
+                    user.password = undefined;
+                });
+                res.send({ users: users });
+            });
     });
 
 app.get('/cgi/:mime/:site/:path',
@@ -220,6 +246,65 @@ app.get('/cgi/:mime/:site/:path',
 app.get('/projects/:id',
     function (req, res, done) {
 	res.redirect('/#project' + req.params.id);
+    });
+
+app.post('/api/changepwd',
+    function (req, res, done) {
+        if (!req.user) {
+            return done('User not found');
+        }
+        let user = req.user;
+        if (req.body.username !== user.username) {
+            if (user.username !== 'admin') {
+                return done('Only admin can do this');
+            }
+            // We will impersonate here by finding user record
+            user = User.findOne({ where: { username: req.body.username } })
+            .then((impersonatedUser) =>
+              {
+                changePassword(req, res, impersonatedUser, done);
+              })
+            .catch((err) => {
+                req.autherror = 'Can not find user';
+                return done(null, false);
+            });
+        } else {
+            changePassword(req, res, user, done);
+        }
+    });
+
+function changePassword(req, res, user, done) {
+    const password = req.body.password;
+    if (!password || password.length<4) {
+        return done('Wrong password');
+    }
+    var hashedPassword = passwordHash.generate(password, {});
+    user.password = hashedPassword;
+    user.save({}).then((validationError) => {
+        if (typeof (validationError.errors) == 'undefined') {
+            res.send({ result: 'OK' });
+        } else {
+            done(validationError.errors);
+        }
+    })
+    .catch((err) =>
+        done('Can not change password')
+    );
+}
+
+app.post('/api/deleteUser',
+    function (req, res, done) {
+        if (!req.user) {
+            return done('User not found');
+        }
+        if (req.user.username !== 'admin') {
+            return done('You are not administrator');
+        }
+        if (req.body.username === 'admin') {
+          return done('You can not delete administrator');
+        }
+        // TODO: actually delete user
+        res.send({ result: 'OK' });
     });
 
 var port = 3000;
