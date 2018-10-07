@@ -35,24 +35,25 @@ class ProjectWebSaver extends React.Component {
         this.props.vm.saveProjectSb3().then(content => {
             xhr({
                 method: 'POST',
-                uri: `/api/save?title=` + me.props.projectName + '&id=' + projectId,
+                uri: `/api/save?title=${me.props.projectName}&id=${projectId}&username=${this.props.username}`,
                 body: content,
-                json: false,
+                json: true
             }, (error, response)  => {
                 const hasError = error || response.statusCode !== 200;
-                const result = hasError ? { result: 'NOPE'} : JSON.parse(response.body);
+                const result = hasError ? { result: 'NOPE'} : response.body;
                 if (error || response.statusCode !== 200 || !result || result.result != 'OK') {
                     // TODO: i18n:
-                    this.props.setProgressError('Saving project failed. May be you need to sign in?');
+                    const displayError = error ? error : response.body;
+                    this.props.setProgressError('Saving project failed: ' + displayError);
                     setTimeout(() => {
-                        this.props.closeProgressDialog();                        
+                        this.props.closeProgressDialog();
                     }, 5000);
                     return;
                 }
                 me.props.setProjectId(result.id);
                 this.props.closeProgressDialog();
             });
-            
+
             });
     }
     render () {
@@ -80,6 +81,7 @@ ProjectWebSaver.propTypes = {
 const mapStateToProps = state => ({
     vm: state.scratchGui.vm,
     projectName: state.scratchGui.profile.projectName,
+    username: state.scratchGui.profile.username,
     projectId: state.scratchGui.profile.projectId,
 });
 

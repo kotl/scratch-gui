@@ -43,15 +43,17 @@ class ProjectLibrary extends React.PureComponent {
         const me = this;
         xhr({
             method: 'POST',
-            uri: '/api/load?id=' + id,
+            uri: `/api/load?id=${id}&username=${this.props.username}`,
             body: '',
             json: false,
             responseType: 'arraybuffer',
         }, (error, response) => {
             const hasError = error || response.statusCode !== 200;
-            if (error || response.statusCode !== 200) {
+            const result = hasError ? { result: 'NOPE'} : response.body;
+            if (error || response.statusCode !== 200 || !result) {
                 // TODO: i18n:
-                this.props.setProgressError('Lading project failed. May be you need to sign in?');
+                const displayError = error ? error : new TextDecoder("utf-8").decode(response.body);
+                this.props.setProgressError('Loading project failed:' + displayError);
                 setTimeout(() => {
                     this.props.closeProgressDialog();
                 }, 5000);
@@ -95,6 +97,7 @@ class ProjectLibrary extends React.PureComponent {
 ProjectLibrary.propTypes = {
     intl: intlShape.isRequired,
     onRequestClose: PropTypes.func,
+    setProgressError: PropTypes.func,
     vm: PropTypes.shape({
         loadProject: PropTypes.func
     }),
@@ -104,6 +107,7 @@ ProjectLibrary.propTypes = {
 const mapStateToProps = state => ({
     visible: state.scratchGui.modals.ProjectLibrary,
     projects: state.scratchGui.profile.projects,
+    username: state.scratchGui.profile.username,
     vm: state.scratchGui.vm,
 });
 

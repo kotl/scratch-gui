@@ -21,7 +21,7 @@ import {
     closeFileMenu,
 } from '../reducers/menus';
 
-import { setProgressDescription, setProjectList } from '../reducers/profile';
+import { setProgressDescription, setProjectList,setProgressError } from '../reducers/profile';
 
 class ProjectWebLoader extends React.Component {
     constructor(props) {
@@ -40,15 +40,16 @@ class ProjectWebLoader extends React.Component {
         const me = this;
         xhr({
             method: 'POST',
-            uri: `/api/list`,
+            uri: `/api/list?username=${this.props.username}`,
             body: {},
             json: true
         }, (error, response) => {
             const hasError = error || response.statusCode !== 200;
-            const result = response.body;
+            const result = hasError ? { result: 'NOPE'} : response.body;
             if (error || response.statusCode !== 200 || !result || result.result != 'OK') {
                 // TODO: i18n:
-                this.props.setProgressError('Loading list of projects failed. May be you need to sign in?');
+                const displayError = error ? error : response.body;
+                this.props.setProgressError('Loading list of projects failed: '+ displayError);
                 setTimeout(() => {
                     this.props.closeProgressDialog();
                 }, 5000);
@@ -75,6 +76,7 @@ class ProjectWebLoader extends React.Component {
 
 ProjectWebLoader.propTypes = {
     openLoadingState: PropTypes.func,
+    setProgressError: PropTypes.func,
     openProjectLibrary: PropTypes.func,
     closeProjectLibrary: PropTypes.func,
     setProgressDescription: PropTypes.func,
@@ -86,6 +88,7 @@ ProjectWebLoader.propTypes = {
 
 const mapStateToProps = state => ({
     vm: state.scratchGui.vm,
+    username: state.scratchGui.profile.username,
 });
 
 const mapDispatchToProps = dispatch => ({
