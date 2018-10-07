@@ -1,21 +1,10 @@
 import {Input, Output , SimpleChange, Component, OnInit, OnChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import {API_BASE} from '../constants';
-import { LoginState, ApiClient } from '../api.client';
+import { ProjectInfo, User, LoginState, ApiClient } from '../api.client';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { PwddialogComponent } from '../pwddialog/pwddialog.component';
 
-export interface User {
-  username: string;
-  id: number;
-  projects: ProjectInfo[];
-  checked?: boolean;
-}
 
-export interface ProjectInfo {
-    title: string;
-    projectId: number;
-}
 
 @Component({
   selector: 'app-users',
@@ -28,7 +17,8 @@ export class UsersComponent implements OnInit, OnChanges {
   state: LoginState = 'NOT_LOGGED_IN';
   @Output()
   users: User[];
-  constructor(private http: HttpClient,
+  constructor(
+    private apiClient: ApiClient,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -50,12 +40,9 @@ export class UsersComponent implements OnInit, OnChanges {
     }
   }
   getUsers() {
-    this.http.post(API_BASE + '/users', {})
-      .subscribe((data: any) => {
-          this.users = data.users;
-          this.error = '';
-      }, (error) => {
-        this.error = error.error;
+    this.apiClient.getUsers().then(
+      (users) => {
+        this.users = users;
       });
 
   }
@@ -72,7 +59,10 @@ export class UsersComponent implements OnInit, OnChanges {
   }
 
   onDelete(user: User) {
-    // TODO: make service method for deletion and call it
+    this.apiClient.deleteUserAndProjects(user.username).then(
+      () => {
+        this.getUsers();
+      });
   }
 
 }
