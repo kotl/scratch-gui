@@ -66,7 +66,7 @@ export class UsersComponent implements OnInit, OnChanges {
         cancel: 'Cancel',
         title: 'Are you sure?',
         label: `You will be deleting user ${user.username} and all their projects`,
-        onDialogResult: (res)  => {
+        onDialogResult: (res) => {
           if (res) {
             this.deleteUser(user);
           }
@@ -81,6 +81,39 @@ export class UsersComponent implements OnInit, OnChanges {
       () => {
         this.getUsers();
       });
+  }
+
+  deleteAll() {
+    const selectedCount = this.users.filter(
+      (user) => (user.checked)).length;
+    let counter = 0;
+    this.users.filter((user) => (user.checked)).forEach((user) => {
+      this.apiClient.deleteUserAndProjects(user.username).then(
+        () => {
+          counter++;
+          if (counter === selectedCount) {
+            this.getUsers();
+          }
+        }
+      );
+    });
+  }
+
+  onDeleteAll() {
+    const dialogRef = this.dialog.open(WarningComponent, {
+      data: {
+        accept: 'Ok',
+        cancel: 'Cancel',
+        title: 'Are you sure?',
+        label: `You will be deleting all selected users and all their projects`,
+        onDialogResult: (res) => {
+          if (res) {
+            this.deleteAll();
+          }
+        }
+      },
+      panelClass: 'custom-dialog-container',
+    });
   }
 
 }
