@@ -12,7 +12,7 @@ export class AppComponent {
   state: LoginState = 'NOT_LOGGED_IN';
   title = 'CS First Offline Admin';
 
-  @Input() password = 'test';
+  @Input() password = '';
   @Output() error = '';
   @Input() newpassword = '';
   @Input() confirmpassword = '';

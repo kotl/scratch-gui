@@ -15,6 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { PwddialogComponent } from './pwddialog/pwddialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { WarningComponent } from './warning/warning.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     BrowseComponent,
     ChangepwdComponent,
     PwddialogComponent,
+    WarningComponent,
   ],
   imports: [
     MatDialogModule,
@@ -42,6 +44,7 @@ import {MatDialogModule} from '@angular/material/dialog';
   ],
   entryComponents: [
     PwddialogComponent,
+    WarningComponent,
   ],
   providers: [
 

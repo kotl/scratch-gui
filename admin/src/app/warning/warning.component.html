@@ -1,0 +1,12 @@
+<mat-card class="form">
+  <mat-card-title>{{title}}</mat-card-title>
+  <mat-label>{{label}}</mat-label>
+  <mat-card-actions align="end" class="actions-padding">
+        <button (click)="onAccept()" color="warn" mat-raised-button>
+      {{accept}}
+    </button>
+    <button (click)="onCancel()" mat-raised-button>
+      {{cancel}}
+    </button>
+    </mat-card-actions>
+</mat-card>

@@ -28,6 +28,11 @@ body {
   padding: 10px;
 }
 
+.actions-padding {
+  margin-top:10px;
+  margin-bottom:30px;
+}
+
 .form-padding {
   margin: 30px;
 }
