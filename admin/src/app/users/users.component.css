@@ -28,3 +28,7 @@ td {
   margin: 20px;
   min-width: 200px;
 }
+
+.admin-row {
+  background-color: #d1ffb7;
+}

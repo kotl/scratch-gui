@@ -158,10 +158,10 @@ function projectMap(projects) {
     }, {})
 }
 
-function saveUserProjects(req, res, pm, id, done) {
-    req.user.projects = Object.keys(pm).map(id => pm[id]).sort(
+function saveUserProjects(req, user, res, pm, id, done) {
+    user.projects = Object.keys(pm).map(id => pm[id]).sort(
         (a, b) => {return a.title - b.title});
-    req.user.save({})
+    user.save({})
         .then((validationError) => {
             if (typeof (validationError.errors) == 'undefined') {
                 res.send({ id: id, result: 'OK' });
@@ -179,9 +179,9 @@ function saveUserProjects(req, res, pm, id, done) {
         );
 }
 
-function createNewProject(req, res, pm, title, done) {
+function createNewProject(req, data, res, pm, title, done) {
     console.log("Id or project not found");
-    return ScratchProject.create({ owner: req.user.username, data: req.body })
+    return ScratchProject.create({ owner: req.user.username, data })
         .then((project) => {
             let id = project.projectId;
             pm[id] = {
@@ -189,7 +189,7 @@ function createNewProject(req, res, pm, title, done) {
                 projectId: id,
             }
             console.log("New id created:" + id);
-            return saveUserProjects(req, res, pm, id, done);
+            return saveUserProjects(req, req.user, res, pm, id, done);
         })
         .catch((err) => {
             authError(req, res, 'Can not create project');
@@ -198,16 +198,16 @@ function createNewProject(req, res, pm, title, done) {
             );
 }
 
-function updateExistingProject(req, res, pm, title, id, done) {
+function updateExistingProject(req, data, res, pm, title, id, done) {
     console.log("Id already exists");
     pm[id].title = title;
     ScratchProject.findById(id)
         .then((project) => {
-            project.data = req.body;
+            project.data = data;
             project.save({})
                 .then((validationError) => {
                     if (typeof (validationError.errors) == 'undefined') {
-                        return saveUserProjects(req, res, pm, id, done);
+                        return saveUserProjects(req, req.user, res, pm, id, done);
                     }
                     authError(req, res, validationError.errors);
                     return done(null, false);
@@ -238,9 +238,9 @@ app.post('/api/save',
         const title = req.query.title ? req.query.title : 'Untitled';
         const pm = projectMap(req.user.projects);
         if (!id || !pm[id]) {
-            return createNewProject(req, res, pm, title, done);
+            return createNewProject(req, req.body, res, pm, title, done);
         } else {
-            return updateExistingProject(req, res, pm, title, id, done);
+            return updateExistingProject(req, req.body, res, pm, title, id, done);
         }
     });
 
@@ -386,22 +386,12 @@ adminApp.post('/api/deleteUser',
           authError(req, res, 'You can not delete administrator');
           return done(null, false);
         }
-        // TODO: actually delete req.body.username
         User.findOne({ where: { username: req.body.username } })
             .then((user) =>
              {
-                for (p of user.projects) {
-                    console.log("Deleting project: " + p.projectId);
-                    ScratchProject.findById(p.projectId)
-                    .then(
-                        (project) => {
-                            project.destroy().then(
-                                (status) => {
-                                    console.log("Deleted project: " + p.title);
-                                }
-                            )
-                        }
-                    );
+                if (user.projects.length > 0) {
+                    authError(req, res,  'User has projects, can not delete.');
+                    return done(null, false);
                 }
                 console.log("Deleting user: " + user.id);
                 user.destroy().then
@@ -418,48 +408,66 @@ adminApp.post('/api/deleteUser',
             });
     });
 
+// Admin app delete user API
+adminApp.post('/api/deleteProject',
+    function (req, res, done) {
+        const error = errorIfNotAdmin(req, res);
+        if (error) return done(null, false);
+        User.findOne({ where: { username: req.body.username } })
+            .then((user) =>
+             {
+                 const projectId = req.body.projectId;
+                    console.log("Deleting project: " + projectId);
+                    ScratchProject.findById(projectId)
+                    .then(
+                        (project) => {
+                            project.destroy().then(
+                                (status) => {
+                                    const pm = projectMap(user.projects);
+                                    delete pm[projectId];
+                                    return saveUserProjects(req, user, res, pm, projectId, done);
+                                }
+                            )
+                        }
+                    ).catch((err) => {
+                        authError(req, res,  'Can not find project');
+                        return done(null, false);
+                    });
+            })
+            .catch((err) => {
+                authError(req, res,  'Can not find user');
+                return done(null, false);
+            });
+    });
+
+
 // Copy projects of a user to admin user
-adminApp.post('/api/copyProjects',
+adminApp.post('/api/copyProject',
     function (req, res, done) {
         const error = errorIfNotAdmin(req, res);
         if (error)           return done(null, false);
         if (req.body.username === 'admin') {
-          authError(req, res, 'You can not copy projects from admin to admin');
+          authError(req, res, 'You can not copy project from admin to admin');
           return done(null, false);
         }
-        const projectIds = req.body.projects;
+        const projectId = req.body.projectId;
         User.findOne({ where: { username: req.body.username } })
             .then((user) =>
              {
-                 const projects = user.projects.filter( (project) => {
-                     if (!projectIds || projectIds.length === 0) {
-                         return true;
-                     }
-                     return projectIds.includes(project.projectId);
-                 });
-                 console.log("Copying these projects: " + JSON.stringify(projects));
-                 res.send({ result: 'OK' });
-                 /*
-                for (p of projects) {
-                    ScratchProject.findById(p.projectId)
+                 const admin = req.user;
+                 const pm = projectMap(admin.projects);
+                 const userPm = projectMap(user.projects);
+                 ScratchProject.findById(projectId)
                     .then(
                         (project) => {
-
-                            const pm = projectMap(req.user.projects);
-                            if (!id || !pm[id]) {
-                                return createNewProject(req, res, pm, title, done);
-                            } else {
-                                return updateExistingProject(req, res, pm, title, id, done);
-                            }
-
-                            // Make a new id and save the project for admin, and also
-                            // add to the list of projects for admin user.
+                            const title = user.username + ": " + userPm[projectId].title;
+                            console.log("Creating copy of: " + title);
+                            return createNewProject(req, project.data, res, pm, title, done);
                         }
                     );
-                }
-                */
             })
             .catch((err) => {
+                console.log(err);
                 authError(req, res,  'Can not find user');
                 return done(null, false);
             });

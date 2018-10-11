@@ -3,6 +3,7 @@ import { InjectionToken, Injectable } from '@angular/core';
 import {API_BASE} from './constants';
 import { of, Observable} from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { combineAll, combineLatest, concatMap,flatMap, mergeMap } from 'rxjs/operators';
 
 export interface ProjectInfo {
   title: string;
@@ -61,15 +62,24 @@ export class ApiClient {
     }).pipe(...this.result);
   }
 
-  deleteUserAndProjects(username: string): Observable<LoginResult> {
+  deleteUser(username: string): Observable<LoginResult> {
     return this.http.post<LoginResult>(API_BASE + '/deleteUser', {
       username }).pipe(...this.result);
   }
 
-  copyProjects(username: string, projects?: string[]): Observable<LoginResult> {
-    return this.http.post<LoginResult>(API_BASE + '/copyProjects', {
-      username, projects,
-    }).pipe(...this.result);
+  deleteProject(username: string, projectId: number): Observable<LoginResult> {
+    return this.http.post<LoginResult>(API_BASE + '/deleteProject', {
+      username, projectId }).pipe(...this.result);
+  }
+
+
+  copyProjects(username: string, projects: number[]): Observable<LoginResult[]> {
+    return of(...projects).pipe(
+      concatMap((projectId) => {
+        return this.http.post<LoginResult>(API_BASE + '/copyProject', {
+            username, projectId}).pipe(...this.result);
+      }
+      )).pipe(combineLatest());
   }
 
   getUsers() {

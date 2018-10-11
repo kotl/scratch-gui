@@ -44,7 +44,11 @@ export class UsersComponent implements OnInit, OnChanges {
   getUsers() {
     this.apiClient.getUsers().subscribe(
       (result) => {
-        this.users = result.users;
+        this.users = result.users.sort( (a, b) => {
+          if (a.username === 'admin') { return -1; }
+          if (b.username === 'admin') { return 1; }
+          return a.username.localeCompare(b.username);
+        });
       });
 
   }
@@ -60,6 +64,23 @@ export class UsersComponent implements OnInit, OnChanges {
     });
   }
 
+  onDeleteProjects(user: User) {
+    const dialogRef = this.dialog.open(WarningComponent, {
+      data: {
+        accept: 'Ok',
+        cancel: 'Cancel',
+        title: 'Are you sure?',
+        label: `You will be deleting all projects of ${user.username}`,
+        onDialogResult: (res) => {
+          if (res) {
+            this.deleteAll([user], false);
+          }
+        }
+      },
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
   onDelete(user: User) {
     const dialogRef = this.dialog.open(WarningComponent, {
       data: {
@@ -69,7 +90,7 @@ export class UsersComponent implements OnInit, OnChanges {
         label: `You will be deleting user ${user.username} and all their projects`,
         onDialogResult: (res) => {
           if (res) {
-            this.deleteUser(user);
+            this.deleteAll([user], true);
           }
         }
       },
@@ -77,19 +98,31 @@ export class UsersComponent implements OnInit, OnChanges {
     });
   }
 
-  deleteUser(user: User) {
-    this.apiClient.deleteUserAndProjects(user.username).subscribe(
-      (res: LoginResult) => {
-        this.result = res;
-        this.getUsers();
-      });
-  }
 
-  deleteAll() {
-    of(...this.selectedUsers).pipe(
+  deleteAll(users: User[], deleteUserAsWell: boolean) {
+    of(...users).pipe(
       concatMap(
-        (val) => this.apiClient.deleteUserAndProjects(val.username)
-      )).subscribe((res) => { this.result = res; }, undefined, () => {
+        (user) => {
+          const values: Array<ProjectInfo|null> = user.projects;
+          if (!!deleteUserAsWell) {
+            values.push(null);
+          }
+          return of(...values).pipe(
+            concatMap(
+              (project) => {
+                if (!!project && !!project.projectId) {
+                  return this.apiClient.deleteProject(user.username,
+                    project.projectId);
+                } else {
+                  return this.apiClient.deleteUser(user.username);
+                }
+              }
+            )
+          );
+        }
+      )).subscribe((res) => {
+        this.result = res;
+      }, undefined, () => {
         this.getUsers();
       });
   }
@@ -103,12 +136,30 @@ export class UsersComponent implements OnInit, OnChanges {
         label: `You will be deleting all selected users and all their projects`,
         onDialogResult: (res) => {
           if (res) {
-            this.deleteAll();
+            this.deleteAll(this.selectedUsers, true);
           }
         }
       },
       panelClass: 'custom-dialog-container',
     });
+  }
+
+  onDeleteProjectsOfSelected() {
+    const dialogRef = this.dialog.open(WarningComponent, {
+      data: {
+        accept: 'Ok',
+        cancel: 'Cancel',
+        title: 'Are you sure?',
+        label: `You will be deleting all projects of selected users`,
+        onDialogResult: (res) => {
+          if (res) {
+            this.deleteAll(this.selectedUsers, false);
+          }
+        }
+      },
+      panelClass: 'custom-dialog-container',
+    });
+
   }
 
   set result(value: LoginResult) {
@@ -126,20 +177,23 @@ export class UsersComponent implements OnInit, OnChanges {
   }
 
   onCopyToAdmin(user: User) {
-    this.apiClient.copyProjects(user.username).subscribe(
-      (res: LoginResult) => {
-        // Show toast?
-        this.result = res;
-        this.getUsers();
-      }
-    );
+    this.copyAllToAdmin([user]);
   }
 
   onCopyAllToAdmin() {
-   of(...this.selectedUsers).pipe(
+    this.copyAllToAdmin(this.selectedUsers);
+  }
+
+  copyAllToAdmin(users: User[]) {
+   of(...users).pipe(
       concatMap(
-        (val) => this.apiClient.copyProjects(val.username)
-      )).subscribe((res) => { this.result = res; }, undefined, () => {
+        (val) => this.apiClient.copyProjects(val.username, val.projects.map(p => p.projectId))
+      )).subscribe((results) => {
+        results.filter((res) => !!res.error).forEach(
+          (res => {
+            this.result = res;
+          }));
+      }, undefined, () => {
         this.getUsers();
       });
   }
