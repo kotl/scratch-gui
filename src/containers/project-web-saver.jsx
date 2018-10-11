@@ -37,10 +37,10 @@ class ProjectWebSaver extends React.Component {
                 method: 'POST',
                 uri: `/api/save?title=${me.props.projectName}&id=${projectId}&username=${this.props.username}`,
                 body: content,
-                json: true
+                json: false,
             }, (error, response)  => {
                 const hasError = error || response.statusCode !== 200;
-                const result = hasError ? { result: 'NOPE'} : response.body;
+                const result = hasError ? { result: 'NOPE'} : JSON.parse(response.body);
                 if (error || response.statusCode !== 200 || !result || result.result != 'OK') {
                     // TODO: i18n:
                     const displayError = error ? error : response.body;
