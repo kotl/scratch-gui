@@ -29,7 +29,7 @@ export class ChangepwdComponent implements OnInit {
       this.error = 'Passwords do not match.';
       return;
     }
-    this.apiClient.changePassword(this.username, this.newpassword).then(
+    this.apiClient.changePassword(this.username, this.newpassword).subscribe(
       (status) => {
         this.error = status.error;
         if (!this.error) {

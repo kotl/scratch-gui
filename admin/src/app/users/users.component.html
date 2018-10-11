@@ -47,18 +47,31 @@
 
               <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions
+                      <button mat-icon-button (click)="onCopyAllToAdmin()"
+
+                      matTooltip="Copy all projects of selected users to admin user"
+                      >
+                          <mat-icon>file_copy</mat-icon>
+                      </button>
                       <button mat-icon-button (click)="onDeleteAll()"
 
                       matTooltip="Delete all selected users and their projects"
                       >
                           <mat-icon>delete</mat-icon>
                       </button>
+
                   </th>
                   <td mat-cell *matCellDef="let element" >
                       <button mat-icon-button (click)="onChangePassword(element)"
                       matTooltip="Change password"
                       >
                           <mat-icon>lock</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="onCopyToAdmin(element)"
+                      matTooltip="Copy all projects to admin"
+                       *ngIf="element.username != 'admin'"
+                      >
+                          <mat-icon>file_copy</mat-icon>
                       </button>
                       <button mat-icon-button (click)="onDelete(element)"
                       matTooltip="Delete user and their projects"

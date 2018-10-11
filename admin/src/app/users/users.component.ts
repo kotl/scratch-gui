@@ -1,12 +1,13 @@
 import { Input, Output, SimpleChange, Component, OnInit, OnChanges } from '@angular/core';
 import { API_BASE } from '../constants';
-import { ProjectInfo, User, LoginState, ApiClient } from '../api.client';
+import { ProjectInfo, User, LoginState,LoginResult, ApiClient } from '../api.client';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PwddialogComponent } from '../pwddialog/pwddialog.component';
 import { WarningComponent } from '../warning/warning.component';
 
+import { concatMap } from 'rxjs/operators';
 
-
+import { of } from 'rxjs';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -17,7 +18,7 @@ export class UsersComponent implements OnInit, OnChanges {
   @Input()
   state: LoginState = 'NOT_LOGGED_IN';
   @Output()
-  users: User[];
+  users: User[] = [];
   constructor(
     private apiClient: ApiClient,
     private dialog: MatDialog) { }
@@ -41,9 +42,9 @@ export class UsersComponent implements OnInit, OnChanges {
     }
   }
   getUsers() {
-    this.apiClient.getUsers().then(
-      (users) => {
-        this.users = users;
+    this.apiClient.getUsers().subscribe(
+      (result) => {
+        this.users = result.users;
       });
 
   }
@@ -77,26 +78,20 @@ export class UsersComponent implements OnInit, OnChanges {
   }
 
   deleteUser(user: User) {
-    this.apiClient.deleteUserAndProjects(user.username).then(
-      () => {
+    this.apiClient.deleteUserAndProjects(user.username).subscribe(
+      (res: LoginResult) => {
+        this.result = res;
         this.getUsers();
       });
   }
 
   deleteAll() {
-    const selectedCount = this.users.filter(
-      (user) => (user.checked)).length;
-    let counter = 0;
-    this.users.filter((user) => (user.checked)).forEach((user) => {
-      this.apiClient.deleteUserAndProjects(user.username).then(
-        () => {
-          counter++;
-          if (counter === selectedCount) {
-            this.getUsers();
-          }
-        }
-      );
-    });
+    of(...this.selectedUsers).pipe(
+      concatMap(
+        (val) => this.apiClient.deleteUserAndProjects(val.username)
+      )).subscribe((res) => { this.result = res; }, undefined, () => {
+        this.getUsers();
+      });
   }
 
   onDeleteAll() {
@@ -114,6 +109,39 @@ export class UsersComponent implements OnInit, OnChanges {
       },
       panelClass: 'custom-dialog-container',
     });
+  }
+
+  set result(value: LoginResult) {
+    this.state = value.state;
+    this.error = value.error;
+  }
+
+  get selectedCount() {
+    return this.users.filter(
+      (user) => (user.checked)).length;
+  }
+
+  get selectedUsers() {
+    return this.users.filter((user) => (user.checked));
+  }
+
+  onCopyToAdmin(user: User) {
+    this.apiClient.copyProjects(user.username).subscribe(
+      (res: LoginResult) => {
+        // Show toast?
+        this.result = res;
+        this.getUsers();
+      }
+    );
+  }
+
+  onCopyAllToAdmin() {
+   of(...this.selectedUsers).pipe(
+      concatMap(
+        (val) => this.apiClient.copyProjects(val.username)
+      )).subscribe((res) => { this.result = res; }, undefined, () => {
+        this.getUsers();
+      });
   }
 
 }

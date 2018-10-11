@@ -26,7 +26,7 @@ export class AppComponent {
       password,
     };
     this.apiClient.login(password)
-    .then((status) => {
+    .subscribe((status) => {
       this.state = status.state;
       this.error = status.error;
     });

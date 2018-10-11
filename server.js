@@ -159,18 +159,23 @@ function projectMap(projects) {
 }
 
 function saveUserProjects(req, res, pm, id, done) {
-    req.user.projects = Object.keys(pm).map(id => pm[id]);
+    req.user.projects = Object.keys(pm).map(id => pm[id]).sort(
+        (a, b) => {return a.title - b.title});
     req.user.save({})
         .then((validationError) => {
             if (typeof (validationError.errors) == 'undefined') {
                 res.send({ id: id, result: 'OK' });
             } else {
-                done(validationError.errors);
+                authError(req, res, validationError.errors);
+                return done(null, false);
             }
         }
         )
         .catch((err) =>
-            done('Can not convert list of projects')
+           {
+            authError(req, res, 'Can not convert list of projects');
+            return done(null, false);
+        }
         );
 }
 
@@ -186,7 +191,11 @@ function createNewProject(req, res, pm, title, done) {
             console.log("New id created:" + id);
             return saveUserProjects(req, res, pm, id, done);
         })
-        .catch((err) => done('Can not create project'));
+        .catch((err) => {
+            authError(req, res, 'Can not create project');
+            return done(null, false);
+        }
+            );
 }
 
 function updateExistingProject(req, res, pm, title, id, done) {
@@ -200,13 +209,20 @@ function updateExistingProject(req, res, pm, title, id, done) {
                     if (typeof (validationError.errors) == 'undefined') {
                         return saveUserProjects(req, res, pm, id, done);
                     }
-                    return done(validationError.errors);
+                    authError(req, res, validationError.errors);
+                    return done(null, false);
                 }
-                ).catch((err) => done('Can not save project'));
+                ).catch((err) => {
+                    authError(req, res, 'Can not save project');
+                    return done(null, false);
+                }
+                    );
         })
         .catch((err) => {
             console.log(err);
-            return done('Can not find project by id');
+            authError(req, res, 'Can not find project by id');
+            return done(null, false);
+
         });
 }
 
@@ -241,10 +257,15 @@ app.post('/api/load',
                     res.contentType("application/zip");
                     res.send(project.data);
                 } else {
-                    done('Wrong owner');
+                    authError(req, res, 'Wrong owner');
+                    return done(null, false);
                 }
             })
-            .catch((err) => done('Can not find project by id'));
+            .catch((err) => {
+                authError(req, res, 'Can not find project by id');
+                return done(null, false);
+
+            });
     });
 
 // Scratch / CS First - public template project:
@@ -271,7 +292,8 @@ app.post('/api/list',
 adminApp.post('/api/users',
     function (req, res, done) {
         if (!req.user || req.user.username !== 'admin') {
-            return done('Not admin');
+            authError(req, res, 'Not admin');
+            return done(null, false);
         }
         User.findAll({ offset: req.query.offset, limit: 1000 }).then(
             (users) => {
@@ -305,33 +327,23 @@ app.get('/projects/:id',
 // Admin app change password api
 adminApp.post('/api/changepwd',
     function (req, res, done) {
-        if (!req.user) {
-            return done('User not found');
-        }
-        let user = req.user;
-        if (req.body.username !== user.username) {
-            if (user.username !== 'admin') {
-                return done('Only admin can do this');
-            }
+        const error = errorIfNotAdmin(req, res);
+        if (error)           return done(null, false);
             // We will impersonate here by finding user record
             user = User.findOne({ where: { username: req.body.username } })
             .then((impersonatedUser) =>
-              {
-                changePassword(req, res, impersonatedUser, done);
-              })
+                changePassword(req, res, impersonatedUser, done))
             .catch((err) => {
-                req.autherror = 'Can not find user';
+                authError(req, res, 'Can not find user');
                 return done(null, false);
             });
-        } else {
-            changePassword(req, res, user, done);
-        }
     });
 
 function changePassword(req, res, user, done) {
     const password = req.body.password;
     if (!password || password.length<4) {
-        return done('Wrong password');
+        authError(req, res, 'Wrong password');
+        return done(null, false);
     }
     var hashedPassword = passwordHash.generate(password, {});
     user.password = hashedPassword;
@@ -339,25 +351,40 @@ function changePassword(req, res, user, done) {
         if (typeof (validationError.errors) == 'undefined') {
             res.send({ result: 'OK' });
         } else {
-            done(validationError.errors);
+            authError(req, res, validationError.errors);
+            return done(null, false);
         }
     })
-    .catch((err) =>
-        done('Can not change password')
-    );
+    .catch((err) => {
+        authError(req, res, 'Can not change password')
+        return done(null, false);
+    });
+}
+
+function authError(req, res, msg) {
+    req.autherror = msg;
+    res.status(401).send(msg);
+    return msg;
+}
+
+function errorIfNotAdmin(req, res) {
+    if (!req.user) {
+        return authError(req, res, 'User not found');
+    }
+    if (req.user.username !== 'admin') {
+        return authError(req, res, 'You are not administrator');
+    }
+    return '';
 }
 
 // Admin app delete user API
 adminApp.post('/api/deleteUser',
     function (req, res, done) {
-        if (!req.user) {
-            return done('User not found');
-        }
-        if (req.user.username !== 'admin') {
-            return done('You are not administrator');
-        }
+        const error = errorIfNotAdmin(req, res);
+        if (error) return done(null, false);
         if (req.body.username === 'admin') {
-          return done('You can not delete administrator');
+          authError(req, res, 'You can not delete administrator');
+          return done(null, false);
         }
         // TODO: actually delete req.body.username
         User.findOne({ where: { username: req.body.username } })
@@ -386,7 +413,54 @@ adminApp.post('/api/deleteUser',
                 );
             })
             .catch((err) => {
-                req.autherror = 'Can not find user';
+                authError(req, res,  'Can not find user');
+                return done(null, false);
+            });
+    });
+
+// Copy projects of a user to admin user
+adminApp.post('/api/copyProjects',
+    function (req, res, done) {
+        const error = errorIfNotAdmin(req, res);
+        if (error)           return done(null, false);
+        if (req.body.username === 'admin') {
+          authError(req, res, 'You can not copy projects from admin to admin');
+          return done(null, false);
+        }
+        const projectIds = req.body.projects;
+        User.findOne({ where: { username: req.body.username } })
+            .then((user) =>
+             {
+                 const projects = user.projects.filter( (project) => {
+                     if (!projectIds || projectIds.length === 0) {
+                         return true;
+                     }
+                     return projectIds.includes(project.projectId);
+                 });
+                 console.log("Copying these projects: " + JSON.stringify(projects));
+                 res.send({ result: 'OK' });
+                 /*
+                for (p of projects) {
+                    ScratchProject.findById(p.projectId)
+                    .then(
+                        (project) => {
+
+                            const pm = projectMap(req.user.projects);
+                            if (!id || !pm[id]) {
+                                return createNewProject(req, res, pm, title, done);
+                            } else {
+                                return updateExistingProject(req, res, pm, title, id, done);
+                            }
+
+                            // Make a new id and save the project for admin, and also
+                            // add to the list of projects for admin user.
+                        }
+                    );
+                }
+                */
+            })
+            .catch((err) => {
+                authError(req, res,  'Can not find user');
                 return done(null, false);
             });
     });
