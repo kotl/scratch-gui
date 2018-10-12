@@ -144,7 +144,7 @@ app.post('/api/login',
     loginError
     );
 
-adminApp.post('/api/login',
+adminApp.post('/admin/api/login',
     passport.authenticate('local', { failWithError: true }),
     loginSuccess,
     loginError
@@ -289,7 +289,7 @@ app.post('/api/list',
     });
 
 // Admin app list all users in the system
-adminApp.post('/api/users',
+adminApp.post('/admin/api/users',
     function (req, res, done) {
         if (!req.user || req.user.username !== 'admin') {
             authError(req, res, 'Not admin');
@@ -325,7 +325,7 @@ app.get('/projects/:id',
     });
 
 // Admin app change password api
-adminApp.post('/api/changepwd',
+adminApp.post('/admin/api/changepwd',
     function (req, res, done) {
         const error = errorIfNotAdmin(req, res);
         if (error)           return done(null, false);
@@ -378,7 +378,7 @@ function errorIfNotAdmin(req, res) {
 }
 
 // Admin app delete user API
-adminApp.post('/api/deleteUser',
+adminApp.post('/admin/api/deleteUser',
     function (req, res, done) {
         const error = errorIfNotAdmin(req, res);
         if (error) return done(null, false);
@@ -409,7 +409,7 @@ adminApp.post('/api/deleteUser',
     });
 
 // Admin app delete user API
-adminApp.post('/api/deleteProject',
+adminApp.post('/admin/api/deleteProject',
     function (req, res, done) {
         const error = errorIfNotAdmin(req, res);
         if (error) return done(null, false);
@@ -442,7 +442,7 @@ adminApp.post('/api/deleteProject',
 
 
 // Copy projects of a user to admin user
-adminApp.post('/api/copyProject',
+adminApp.post('/admin/api/copyProject',
     function (req, res, done) {
         const error = errorIfNotAdmin(req, res);
         if (error)           return done(null, false);
