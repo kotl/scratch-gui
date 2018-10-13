@@ -23,8 +23,12 @@ const isDev = process.env.ISDEV;
 var session = require("express-session"),
     bodyParser = require("body-parser");
 
+var compression = require('compression');
+
+app.use(compression());
 app.use(express.static('build'));
 app.use('/assets', express.static('assets'));
+
 
 adminApp.use('/admin', express.static('admin/dist/admin'));
 adminApp.use(session({ name:'connect.sid.scratchadmin', secret: 'csfirst-admin' }));
