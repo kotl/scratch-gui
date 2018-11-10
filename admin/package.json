@@ -5,8 +5,9 @@
     "ng": "ng",
     "start": "ng serve --base-href /admin/ --open",
     "build": "ng build",
+    "build-prod": "ng build admin -c production",
     "test": "ng test",
-    "watch": "ng build --output-path dist --watch",
+    "watch": "ng build --output-path dist/admin --watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

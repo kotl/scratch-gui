@@ -11,7 +11,7 @@ cd ..
 
 cd admin
 npm install
-npm run build admin -c production
+npm run build-prod
 
 cd ..
 

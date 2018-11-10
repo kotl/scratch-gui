@@ -1,7 +1,6 @@
 import { Component, Input, Output, Inject } from '@angular/core';
 import { LoginState, ApiClient } from './api.client';
 
-import {API_BASE} from './constants';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

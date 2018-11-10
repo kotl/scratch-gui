@@ -1,5 +1,4 @@
 import { Input, Output, SimpleChange, Component, OnInit, OnChanges } from '@angular/core';
-import { API_BASE } from '../constants';
 import { ProjectInfo, User, LoginState,LoginResult, ApiClient } from '../api.client';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PwddialogComponent } from '../pwddialog/pwddialog.component';
