@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npm run clean && webpack --progress --colors --bail",
     "serve-prod": "npm run clean && webpack --progress --colors --bail && node server.js",
-    "serve": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env ISDEV=YES node server.js\"",
+    "serve": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=DEV node server.js\"",
+    "serve-ind": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=IND node server.js\"",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prune": "./prune-gh-pages.sh",
@@ -149,6 +150,7 @@
     "react-intl-redux": "^0.7.0",
     "react-spinners": "^0.4.5",
     "sequelize": "^4.38.1",
+    "serve-index": "^1.9.1",
     "sqlite3": "^4.0.2"
   }
 }

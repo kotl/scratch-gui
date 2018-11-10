@@ -18,7 +18,9 @@ const ScratchProject = db.ScratchProject;
 const app = express();
 const adminApp = express();
 
-const isDev = process.env.ISDEV;
+const isDev = (process.env.SCRATCH_MODE === 'DEV');
+const isStandalone = (process.env.SCRATCH_MODE === 'IND');
+const isProd = (!isDev && !isStandalone);
 
 var session = require("express-session"),
     bodyParser = require("body-parser");
@@ -29,6 +31,10 @@ app.use(compression());
 app.use(express.static('build'));
 app.use('/assets', express.static('assets'));
 
+if (isStandalone) {
+    var serveIndex = require('serve-index');
+    app.use('/public', express.static('public'), serveIndex('public'));
+}
 
 adminApp.use('/admin', express.static('admin/dist/admin'));
 adminApp.use(session({ name:'connect.sid.scratchadmin', secret: 'csfirst-admin' }));
@@ -479,19 +485,23 @@ adminApp.post('/admin/api/copyProject',
 
 var port = 3000;
 
+if (isStandalone) {
+    port = 80;
+}
+
 app.listen(port, function (error) {
     if (error) {
         console.log(error);
     } else {
-        console.log(`SERVER STARTED, isDev={$isDev}`);
+        console.log('SERVER STARTED');
     }
 });
 
-adminApp.listen(port+1, function (error) {
+adminApp.listen(3001, function (error) {
     if (error) {
         console.log(error);
     } else {
-        console.log(`ADMIN SERVER STARTED, isDev={$isDev}`);
+        console.log('ADMIN SERVER STARTED');
     }
 });
 
