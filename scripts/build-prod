@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+cd ..
+
+mkdir public
 npm install
 
 export NODE_ENV=production
@@ -11,7 +15,7 @@ cd ..
 
 cd admin
 npm install
-npm run build-prod
+npm run-script ng build admin -c production
 
 cd ..
 
