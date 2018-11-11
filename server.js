@@ -334,6 +334,18 @@ app.get('/projects/:id',
 	res.redirect('/#project' + req.params.id);
     });
 
+// Redirect to admin app if accessed at the top.
+app.get('/admin',
+   function(req, res, done) {
+	res.redirect('http://' + req.hostname + ':3001/admin');
+   });
+
+// Redirect to admin app if accessed at the top.
+adminApp.get('/',
+   function(req, res, done) {
+	res.redirect('/admin');
+   });
+
 // Admin app change password api
 adminApp.post('/admin/api/changepwd',
     function (req, res, done) {
@@ -489,7 +501,7 @@ if (isStandalone) {
     port = 80;
 }
 
-app.listen(port, function (error) {
+app.listen(port, '0.0.0.0', function (error) {
     if (error) {
         console.log(error);
     } else {
@@ -497,7 +509,7 @@ app.listen(port, function (error) {
     }
 });
 
-adminApp.listen(3001, function (error) {
+adminApp.listen(3001, '0.0.0.0', function (error) {
     if (error) {
         console.log(error);
     } else {
