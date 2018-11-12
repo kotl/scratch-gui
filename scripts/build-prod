@@ -18,7 +18,7 @@ export NODE_ENV=production
 npm run build
 
 cd admin
-echo installing in admin
+echo building in admin
 npm run-script ng build admin -c production
 cd ..
 
