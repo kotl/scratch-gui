@@ -4,18 +4,25 @@ cd "$(dirname "$0")"
 cd ..
 
 mkdir public
+
+echo installing in main
 npm install
 
+cd admin
+echo installing in admin
+npm install
+cd ..
+
+echo building in main
 export NODE_ENV=production
 npm run build
 
-cd assets
-node getassets.js
+cd admin
+echo installing in admin
+npm run-script ng build admin -c production
 cd ..
 
-cd admin
-npm install
-npm run-script ng build admin -c production
-
+cd assets
+node getassets.js
 cd ..
 

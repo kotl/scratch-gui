@@ -1,7 +1,7 @@
-
 cd /D "%~dp0"
+cd ..\..\
 
-cd ..\..
+call ..\node\nodevars
 
 mkdir public
 echo installing in main
@@ -16,11 +16,11 @@ set NODE_ENV=production
 echo building in main
 call npm run build
 
-cd assets
-call node getassets.js
-cd ..
-
 cd admin
 echo building in admin
 call npm run-script ng build admin "-c" production
+cd ..
+
+cd assets
+call node getassets.js
 cd ..
