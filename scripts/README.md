@@ -10,7 +10,9 @@
 
 ##Step 2.
 
-  run build-prod directly from this directory. You must be connected to internet
+  run:
+  ./build-prod
+  directly from this directory. You must be connected to internet
   and depending on your connection, it may take a long time. 
   If some errors occurred or connection gets interrupted, you may have to run
   this again in order to fully install / build repository.
@@ -20,6 +22,7 @@
   Now you are ready to run Scratch Portable. You can use this step again next
   time you boot your computer to start serving content. No need to repeat steps 1 and 2.
   
-  run serve-ind
+  run:
+  sudo ./serve-ind
 
   in case you need to stop, it press Ctrl+C
