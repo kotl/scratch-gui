@@ -143,6 +143,6 @@
     "md5": "^2.2.1",
     "open": "0.0.5",
     "react-intl-redux": "^0.7.0",
-    "react-spinners": "^0.4.5",
+    "react-spinners": "^0.4.5"
   }
 }

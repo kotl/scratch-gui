@@ -3,4 +3,4 @@ cd /D "%~dp0"
 
 cd ..\..
 
-call .\build-shared.bat
+call scripts\win\build-shared.bat

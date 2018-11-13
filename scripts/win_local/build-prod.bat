@@ -3,4 +3,4 @@ cd ..\..\
 
 call ..\node\nodevars
 
-call ..\win\build-shared.bat
+call scripts\win\build-shared.bat

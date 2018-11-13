@@ -10,9 +10,9 @@
   "bin": "server.js",
   "pkg": {
     "assets": [
-	"../build/**/*",
-	"../assets/**/*",
-	"../admin/dist/admin/**/*"
+      "../build/**/*",
+      "../assets/**/*",
+      "../admin/dist/admin/**/*"
     ],
     "targets": [
       "node10-win-x64"
