@@ -17,3 +17,5 @@ cd ..
 copy /Y scripts\win_distrib\Service*.bat distrib\ScratchPortable\
 copy /Y scripts\win_distrib\Run*.bat distrib\ScratchPortable\
 copy /Y scripts\win_distrib\nssm.exe distrib\ScratchPortable\
+
+"C:\Program Files (x86)\NSIS\makensis" scripts\win_distrib\ScratchPortable.nsi
