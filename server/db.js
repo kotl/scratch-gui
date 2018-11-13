@@ -4,12 +4,14 @@ const path = require('path');
 
 var installDir = path.dirname(process.argv0);
 
-if (!fs.existsSync(installDir + '/data')) {
-  fs.mkdirSync(installDir + '/data');
+if (process.argv.length > 2) {
+  if (!process.argv[process.argv.length-1].startsWith('--')) {
+	installDir = process.argv[process.argv.length-1];
+  }
 }
 
-if (!fs.existsSync(installDir +'/public')) {
-  fs.mkdirSync(installDir + '/public');
+if (!fs.existsSync(installDir + '/data')) {
+  fs.mkdirSync(installDir + '/data');
 }
 
 const sequelize = new Sequelize('database', 'username', 'password', {
@@ -55,5 +57,5 @@ const User = sequelize.define('user', {
 User.sync();
 ScratchProject.sync();
 
-module.exports = { User, ScratchProject };
+module.exports = { User, ScratchProject, installDir };
 

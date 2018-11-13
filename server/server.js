@@ -12,6 +12,10 @@ var passport = require('passport')
 
 var db = require('./db');
 
+if (!fs.existsSync(db.installDir +'/public')) {
+  fs.mkdirSync(db.installDir + '/public');
+}
+
 const User = db.User;
 const ScratchProject = db.ScratchProject;
 
@@ -20,7 +24,7 @@ const adminApp = express();
 
 const isDev = (process.env.SCRATCH_MODE === 'DEV');
 const isStandalone = (process.env.SCRATCH_MODE === 'IND') ||
-  (process.argv.length === 3 && process.argv[2] === '--ind' );
+  (process.argv.length > 2 && process.argv[2] === '--ind' );
 const isProd = (!isDev && !isStandalone);
 
 var session = require("express-session"),
@@ -34,7 +38,7 @@ app.use('/assets', express.static(__dirname + '/../assets'));
 
 if (isStandalone) {
     var serveIndex = require('serve-index');
-    app.use('/public', express.static('public'), serveIndex('public'));
+    app.use('/public', express.static(db.installDir + '/public'), serveIndex(db.installDir + '/public'));
 }
 
 adminApp.use('/admin', express.static(__dirname + '/../admin/dist/admin'));
