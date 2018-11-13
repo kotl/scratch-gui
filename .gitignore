@@ -21,5 +21,8 @@ npm-*
 /assets/*.svg
 /assets/*.wav
 /assets/*.png
-
+/public
+/distrib
+/admin/node_modules
+/server/node_modules
 

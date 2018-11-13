@@ -1,12 +1,20 @@
 const Sequelize = require('sequelize');
 const fs = require('fs');
-if (!fs.existsSync('./data')) {
-  fs.mkdirSync('./data');
+const path = require('path');
+
+var installDir = path.dirname(process.argv0);
+
+if (!fs.existsSync(installDir + '/data')) {
+  fs.mkdirSync(installDir + '/data');
+}
+
+if (!fs.existsSync(installDir +'/public')) {
+  fs.mkdirSync(installDir + '/public');
 }
 
 const sequelize = new Sequelize('database', 'username', 'password', {
     dialect: 'sqlite',
-    storage: './data/db.sqlite',
+    storage: installDir + '/data/db.sqlite',
 });
 
 const ScratchProject = sequelize.define('scratchproject', {

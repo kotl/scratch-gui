@@ -1,33 +1,26 @@
-#!/bin/bash
-
-cd "$(dirname "$0")"
-cd ..
-
 mkdir public
-
 echo installing in main
-npm install
+call npm install
 
 cd admin
 echo installing in admin
-npm install
+call npm install
 cd ..
 
 cd server
 echo installing in server
-npm install
+call npm install
 cd ..
 
+set NODE_ENV=production
 echo building in main
-export NODE_ENV=production
-npm run build
+call npm run build
 
 cd admin
 echo building in admin
-npm run-script ng build admin -c production
+call npm run-script ng build admin "-c" production
 cd ..
 
 cd assets
-node getassets.js
+call node getassets.js
 cd ..
-

@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server API for Scratch Portable",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+	"../build/**/*",
+	"../assets/**/*",
+	"../admin/dist/admin/**/*"
+    ],
+    "targets": [
+      "node10-win-x64"
+    ]
+  },
+  "author": "Sergei Kotlyachkov",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "password-hash": "^1.2.2",
+    "pkg": "^4.3.4",
+    "querystring": "^0.2.0",
+    "sequelize": "^4.41.2",
+    "serve-index": "^1.9.1",
+    "sqlite": "^3.0.0"
+  }
+}

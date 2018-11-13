@@ -4,4 +4,4 @@ cd ..\..\
 call ..\node\nodevars
 
 set SCRATCH_MODE=IND
-node server.js
+node server\server.js

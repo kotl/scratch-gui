@@ -5,9 +5,9 @@
   "main": "./dist/scratch-gui.js",
   "scripts": {
     "build": "npm run clean && webpack --progress --colors --bail",
-    "serve-prod": "npm run clean && webpack --progress --colors --bail && node server.js",
-    "serve": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=DEV node server.js\"",
-    "serve-ind": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=IND node server.js\"",
+    "serve-prod": "npm run clean && webpack --progress --colors --bail && node server/server.js",
+    "serve": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=DEV node server/server.js\"",
+    "serve-ind": "concurrently --kill-others \"webpack --colors --watch\" \"cross-env SCRATCH_MODE=IND node server/server.js\"",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prune": "./prune-gh-pages.sh",
@@ -76,7 +76,6 @@
     "lodash.pick": "4.4.0",
     "minilog": "3.1.0",
     "mkdirp": "^0.5.1",
-    "passport-local": "^1.0.0",
     "postcss-import": "^12.0.0",
     "postcss-loader": "^3.0.0",
     "postcss-simple-vars": "^4.0.0",
@@ -141,16 +140,9 @@
     "ajv": "^6.5.3",
     "ajv-keywords": "^3.2.0",
     "bson": "^3.0.2",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
     "md5": "^2.2.1",
     "open": "0.0.5",
-    "passport": "^0.4.0",
-    "password-hash": "^1.2.2",
     "react-intl-redux": "^0.7.0",
     "react-spinners": "^0.4.5",
-    "sequelize": "^4.38.1",
-    "serve-index": "^1.9.1",
-    "sqlite3": "^4.0.2"
   }
 }

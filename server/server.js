@@ -19,7 +19,8 @@ const app = express();
 const adminApp = express();
 
 const isDev = (process.env.SCRATCH_MODE === 'DEV');
-const isStandalone = (process.env.SCRATCH_MODE === 'IND');
+const isStandalone = (process.env.SCRATCH_MODE === 'IND') ||
+  (process.argv.length === 3 && process.argv[2] === '--ind' );
 const isProd = (!isDev && !isStandalone);
 
 var session = require("express-session"),
@@ -28,15 +29,15 @@ var session = require("express-session"),
 var compression = require('compression');
 
 app.use(compression());
-app.use(express.static('build'));
-app.use('/assets', express.static('assets'));
+app.use(express.static(__dirname + '/../build'));
+app.use('/assets', express.static(__dirname + '/../assets'));
 
 if (isStandalone) {
     var serveIndex = require('serve-index');
     app.use('/public', express.static('public'), serveIndex('public'));
 }
 
-adminApp.use('/admin', express.static('admin/dist/admin'));
+adminApp.use('/admin', express.static(__dirname + '/../admin/dist/admin'));
 adminApp.use(session({ name:'connect.sid.scratchadmin', secret: 'csfirst-admin' }));
 adminApp.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 adminApp.use(bodyParser.json());
