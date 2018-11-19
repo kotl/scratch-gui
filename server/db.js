@@ -10,13 +10,18 @@ if (process.argv.length > 2) {
   }
 }
 
-if (!fs.existsSync(installDir + '/data')) {
-  fs.mkdirSync(installDir + '/data');
+if (typeof(process.env.SCRATCH_DIR) !== 'undefined' && process.env.SCRATCH_DIR.length > 0) {
+  installDir = process.env.SCRATCH_DIR;
+}
+
+if (!fs.existsSync(installDir + 'data')) {
+  fs.mkdirSync(installDir + 'data');
 }
 
 const sequelize = new Sequelize('database', 'username', 'password', {
     dialect: 'sqlite',
-    storage: installDir + '/data/db.sqlite',
+    storage: installDir + 'data/db.sqlite',
+    logging: false
 });
 
 const ScratchProject = sequelize.define('scratchproject', {

@@ -12,8 +12,8 @@ var passport = require('passport')
 
 var db = require('./db');
 
-if (!fs.existsSync(db.installDir +'/public')) {
-  fs.mkdirSync(db.installDir + '/public');
+if (!fs.existsSync(db.installDir +'public')) {
+  fs.mkdirSync(db.installDir + 'public');
 }
 
 const User = db.User;
@@ -23,9 +23,9 @@ const app = express();
 const adminApp = express();
 
 const isDev = (process.env.SCRATCH_MODE === 'DEV');
-const isStandalone = (process.env.SCRATCH_MODE === 'IND') ||
-  (process.argv.length > 2 && process.argv[2] === '--ind' );
-const isProd = (!isDev && !isStandalone);
+const isProd = (process.env.SCRATCH_MODE === 'PROD')||
+  (process.argv.length > 2 && process.argv[2] === '--prod' );
+const isStandalone = (!isDev && !isProd);
 
 var session = require("express-session"),
     bodyParser = require("body-parser");
@@ -38,7 +38,7 @@ app.use('/assets', express.static(__dirname + '/../assets'));
 
 if (isStandalone) {
     var serveIndex = require('serve-index');
-    app.use('/public', express.static(db.installDir + '/public'), serveIndex(db.installDir + '/public'));
+    app.use('/public', express.static(db.installDir + 'public'), serveIndex(db.installDir + 'public'));
 }
 
 adminApp.use('/admin', express.static(__dirname + '/../admin/dist/admin'));
