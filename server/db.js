@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 
-var installDir = path.dirname(process.argv0);
+var installDir = path.dirname(process.argv0) + '/';
 
 if (process.argv.length > 2) {
   if (!process.argv[process.argv.length-1].startsWith('--')) {

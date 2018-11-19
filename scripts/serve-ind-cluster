@@ -3,4 +3,4 @@
 cd "$(dirname "$0")"
 cd ..
 export SCRATCH_MODE=IND
-exec node cluster.js
+exec node cluster.js `pwd`/
