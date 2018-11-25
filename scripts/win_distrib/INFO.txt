@@ -1,0 +1,1 @@
+Please use 'Scratch Public Directory' shortcut and copy any files you would like to serve in this directory.
