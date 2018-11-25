@@ -516,14 +516,15 @@ function printIntro() {
       "--                                                ",
       "--     Welcome to Scratch Portable                ",
       "--                                                ",
-      `--     Scratch is available at                    `,
+      `--     Scratch is running on 2 different ports`,
       `--     http://${adr}`,
+      `--     http://${adr}:3000`,
       "--                                                ",
       `--     Web directory for your education materials:   `,
       `--     http://${adr}/public`,
       "--                                                ",
-      `--     Admin Panel is available at                `,
-      `--     http://${adr}/admin`,
+      `--     Admin Panel is running at                `,
+      `--     http://${adr}:3001/admin`,
       "--                                                ",
       "--     Default password for Admin panel is 'admin'.            ",
       "--     You will be asked to change it.   ",
@@ -538,6 +539,16 @@ function printIntro() {
    for (line of lines) {
        console.log(line.padEnd(66,' ') + '--');
    }
+}
+
+if (port != 3000) {
+  app.listen(3000, '0.0.0.0', function (error) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('BACKUP APP SERVER STARTED');
+    }
+  });
 }
 
 app.listen(port, '0.0.0.0', function (error) {
@@ -555,5 +566,3 @@ app.listen(port, '0.0.0.0', function (error) {
       });
     }
 });
-
-
