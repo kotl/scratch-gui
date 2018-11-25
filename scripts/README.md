@@ -1,11 +1,11 @@
 # General information
 
 Scratch Portable is a modified version of Scratch 3.0 that is enabled with the following features:
-* It can save/load files
-* It can run on Local Area Network and does not need internet connection
+* It can save/load projects.
+* It can run on Local Area Network and does not need Internet connection at all.
 * It comes with small, but simple Admin panel that allows educator to change passwords for any users created within this 
 closed eco-system as well as copy their projects to 'admin' user. (admin user itself is capable of logging into Scratch).
-* Scratch Portable initially developed to experiment with CS First Offline solution, however after several suggestions it 
+* Scratch Portable was initially developed to experiment with CS First Offline solution, however after several suggestions it 
 was decided to make it available in a standalone package.
 
 # Windows installation:
