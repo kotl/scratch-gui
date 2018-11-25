@@ -20,3 +20,5 @@
   run serve-ind.bat
 
   in case you need to stop, it press Ctrl+C
+
+  Alternatively, you can try running serve-ind-cluster.bat that should be more performant version.
