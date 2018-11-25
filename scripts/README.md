@@ -11,8 +11,8 @@ was decided to make it available in a standalone package.
 # Windows installation:
 
 ## [Compiling with nodejs](win/README.md)
-## [Packaging with NSIS](win_distrib/README.md)
-## Or use released installer.
+## Packaging with NSIS (guide to be written)
+## Or use [released installer](https://github.com/kotl/scratch-portable/releases)
 
 # Running Scratch Portable with nodejs on MacOS or Linux
 
