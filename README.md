@@ -4,9 +4,9 @@
 [![Build Status](https://travis-ci.com/LLK/scratch-gui.svg?token=Yfq2ryN1BwaxDME69Lnc&branch=master)](https://travis-ci.com/LLK/scratch-gui)
 [![Greenkeeper badge](https://badges.greenkeeper.io/LLK/scratch-gui.svg)](https://greenkeeper.io/)
 
-## NOTES ON SCRATCH PORTABLE!!!
+## NOTES ON SCRATCH PORTABLE installation steps:
 Please look in [scripts/README.md](scripts/README.md) for install steps.
-The rest of this file is left ontouched for easier downstream merges.
+The rest of this file is left untouched for easier downstream merges.
 
 ## Installation
 This requires you to have Git and Node.js installed.
