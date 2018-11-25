@@ -42,3 +42,5 @@ was decided to make it available in a standalone package.
   sudo ./serve-ind
 
   in case you need to stop, it press Ctrl+C
+  
+  Alternatively, you can run serve-ind-cluster which should be more performant version using node-cluster.
