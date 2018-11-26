@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 cd ../..
 
-echo bash scripts/build-prod
+bash scripts/build-prod
 
 mkdir -p distrib/ScratchPortable
 rm -f distrib/ScratchPortable/*.*
