@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+cd ../..
+
+echo bash scripts/build-prod
+
+mkdir -p distrib/ScratchPortable
+rm -f distrib/ScratchPortable/*.*
+
+cd server
+node scratch_portable.js
+cp node_modules/sqlite3/lib/binding/*/node_sqlite3.node ../distrib/ScratchPortable/
+cd ..
+
