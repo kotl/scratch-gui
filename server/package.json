@@ -15,7 +15,7 @@
       "../admin/dist/admin/**/*"
     ],
     "targets": [
-      "node10-win-x64"
+      "host"
     ]
   },
   "author": "Sergei Kotlyachkov",
