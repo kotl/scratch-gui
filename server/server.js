@@ -3,6 +3,8 @@ var path = require('path');
 var open = require('open');
 var fs = require('fs');
 var querystring = require('querystring');
+var ip = require('ip');
+
 
 var projectsPath = '../projects/';
 
@@ -12,8 +14,8 @@ var passport = require('passport')
 
 var db = require('./db');
 
-if (!fs.existsSync(db.installDir +'/public')) {
-  fs.mkdirSync(db.installDir + '/public');
+if (!fs.existsSync(db.installDir +'public')) {
+  fs.mkdirSync(db.installDir + 'public');
 }
 
 const User = db.User;
@@ -23,9 +25,9 @@ const app = express();
 const adminApp = express();
 
 const isDev = (process.env.SCRATCH_MODE === 'DEV');
-const isStandalone = (process.env.SCRATCH_MODE === 'IND') ||
-  (process.argv.length > 2 && process.argv[2] === '--ind' );
-const isProd = (!isDev && !isStandalone);
+const isProd = (process.env.SCRATCH_MODE === 'PROD')||
+  (process.argv.length > 2 && process.argv[2] === '--prod' );
+const isStandalone = (!isDev && !isProd);
 
 var session = require("express-session"),
     bodyParser = require("body-parser");
@@ -38,11 +40,11 @@ app.use('/assets', express.static(__dirname + '/../assets'));
 
 if (isStandalone) {
     var serveIndex = require('serve-index');
-    app.use('/public', express.static(db.installDir + '/public'), serveIndex(db.installDir + '/public'));
+    app.use('/public', express.static(db.installDir + 'public'), serveIndex(db.installDir + 'public'));
 }
 
 adminApp.use('/admin', express.static(__dirname + '/../admin/dist/admin'));
-adminApp.use(session({ name:'connect.sid.scratchadmin', secret: 'csfirst-admin' }));
+adminApp.use(session({ name:'connect.sid.scratchadmin', secret: 'csfirst-admin',  resave: true, saveUninitialized: true }));
 adminApp.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 adminApp.use(bodyParser.json());
 adminApp.use(bodyParser.urlencoded({ extended: true }));
@@ -54,7 +56,7 @@ adminApp.use(function(req, res, next) {
     next();
   });
 
-app.use(session({ name: 'connect.sid.scratch', secret: 'csfirst-offline' }));
+app.use(session({ name: 'connect.sid.scratch', secret: 'csfirst-offline',  resave: true, saveUninitialized: true }));
 
 app.use(bodyParser.raw({ inflate: true, limit: '100000kb', type: 'application/zip' }));
 app.use(bodyParser.json());
@@ -72,7 +74,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-    User.findById(id)
+    User.findByPk(id)
         .then((user) => done(null, user))
         .catch((err) => done(err));
 });
@@ -216,7 +218,7 @@ function createNewProject(req, data, res, pm, title, done) {
 function updateExistingProject(req, data, res, pm, title, id, done) {
     console.log("Id already exists");
     pm[id].title = title;
-    ScratchProject.findById(id)
+    ScratchProject.findByPk(id)
         .then((project) => {
             project.data = data;
             project.save({})
@@ -266,7 +268,7 @@ app.post('/api/load',
             return done(null, false);
         }
         const id = req.query.id;
-        ScratchProject.findById(id)
+        ScratchProject.findByPk(id)
             .then((project) => {
                 if (project.owner === req.user.username) {
                     res.contentType("application/zip");
@@ -445,7 +447,7 @@ adminApp.post('/admin/api/deleteProject',
              {
                  const projectId = req.body.projectId;
                     console.log("Deleting project: " + projectId);
-                    ScratchProject.findById(projectId)
+                    ScratchProject.findByPk(projectId)
                     .then(
                         (project) => {
                             project.destroy().then(
@@ -484,7 +486,7 @@ adminApp.post('/admin/api/copyProject',
                  const admin = req.user;
                  const pm = projectMap(admin.projects);
                  const userPm = projectMap(user.projects);
-                 ScratchProject.findById(projectId)
+                 ScratchProject.findByPk(projectId)
                     .then(
                         (project) => {
                             const title = user.username + ": " + userPm[projectId].title;
@@ -506,19 +508,61 @@ if (isStandalone) {
     port = 80;
 }
 
+var adr = ip.address();
+
+function printIntro() {
+   var lines = [
+      "------------------------------------------------------------------",
+      "--                                                ",
+      "--     Welcome to Scratch Portable                ",
+      "--                                                ",
+      `--     Scratch is running on 2 different ports`,
+      `--     http://${adr}`,
+      `--     http://${adr}:3000`,
+      "--                                                ",
+      `--     Web directory for your education materials:   `,
+      `--     http://${adr}/public`,
+      "--                                                ",
+      `--     Admin Panel is running at                `,
+      `--     http://${adr}:3001/admin`,
+      "--                                                ",
+      "--     Default password for Admin panel is 'admin'.            ",
+      "--     You will be asked to change it.   ",
+      "--                                                ",
+      "--     To sign into Scratch use any 4-letter username / password ",
+      "--     and it will be created automaticaly. ",
+      "--                                                ",
+      "--     To stop Scratch Portable, press Ctrl+C     ",
+      "--                                                ",
+      "------------------------------------------------------------------",
+   ];
+   for (line of lines) {
+       console.log(line.padEnd(66,' ') + '--');
+   }
+}
+
+if (port != 3000) {
+  app.listen(3000, '0.0.0.0', function (error) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('BACKUP APP SERVER STARTED');
+    }
+  });
+}
+
 app.listen(port, '0.0.0.0', function (error) {
     if (error) {
         console.log(error);
     } else {
-        console.log('SERVER STARTED');
+        console.log('APP SERVER STARTED');
+	adminApp.listen(3001, '0.0.0.0', function (error) {
+        if (error) {
+           console.log(error);
+        } else {
+           console.log('ADMIN SERVER STARTED');
+           printIntro();
+        }
+      });
     }
 });
-
-adminApp.listen(3001, '0.0.0.0', function (error) {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log('ADMIN SERVER STARTED');
-    }
-});
-

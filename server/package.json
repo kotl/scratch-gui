@@ -21,6 +21,7 @@
   "author": "Sergei Kotlyachkov",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cluster-service": "^2.1.1",
     "compression": "^1.7.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",

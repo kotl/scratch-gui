@@ -1,8 +1,12 @@
-# scratch-gui
+# scratch-portable
 #### Scratch GUI is a set of React components that comprise the interface for creating and running Scratch 3.0 projects
 
 [![Build Status](https://travis-ci.com/LLK/scratch-gui.svg?token=Yfq2ryN1BwaxDME69Lnc&branch=master)](https://travis-ci.com/LLK/scratch-gui)
 [![Greenkeeper badge](https://badges.greenkeeper.io/LLK/scratch-gui.svg)](https://greenkeeper.io/)
+
+## NOTES ON SCRATCH PORTABLE installation steps:
+Please look in [scripts/README.md](scripts/README.md) for install steps.
+The rest of this file is left untouched for easier downstream merges.
 
 ## Installation
 This requires you to have Git and Node.js installed.

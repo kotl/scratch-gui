@@ -7,4 +7,4 @@ cd ..
 
 export SCRATCH_MODE=PROD
 
-exec node server\server.js
+exec node server\cluster.js
