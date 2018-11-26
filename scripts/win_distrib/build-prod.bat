@@ -1,3 +1,4 @@
+echo This script produces packaged Scratch Portable for Windows
 
 cd /D "%~dp0"
 

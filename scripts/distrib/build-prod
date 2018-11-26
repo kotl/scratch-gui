@@ -1,15 +1,28 @@
 #!/bin/bash
 
+# This script produces packaged Scratch Portable for Linux / MacOS systems.
+
+echo Building packaged Scratch for $MACHTYPE
 cd "$(dirname "$0")"
 cd ../..
 
-bash scripts/build-prod
+echo bash scripts/build-prod
 
-mkdir -p distrib/ScratchPortable
-rm -f distrib/ScratchPortable/*.*
+rm -rf distrib/*
+
+mkdir -p distrib/ScratchPortable/public
+mkdir -p distrib/ScratchPortable/data
+
+cp scripts/distrib/run distrib/ScratchPortable/
 
 cd server
 node scratch_portable.js
 cp node_modules/sqlite3/lib/binding/*/node_sqlite3.node ../distrib/ScratchPortable/
 cd ..
+
+cd distrib
+zip -r ScratchPortable_"$MACHTYPE".zip ScratchPortable
+
+echo You should find your zipped application in
+echo `pwd`/ScratchPortable_"$MACHTYPE".zip
 

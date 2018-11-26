@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# On Posix systems, for service to listen on port 80, you have to run under root.
+sudo ./ScratchPortable
