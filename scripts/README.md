@@ -30,14 +30,14 @@ computer. Clusterization does not work in packaged mode. The following scripts a
 
 # Windows installation:
 
+## Use [released installer](https://github.com/kotl/scratch-portable/releases)
+## [Create installer with NSIS](win_distrib/README.md)
 ## [Compiling with nodejs](win/README.md)
-## [Packaging with NSIS](win_distrib/README.md)
-## Or use [released installer](https://github.com/kotl/scratch-portable/releases)
 
 # Running / Installing Scratch Portable on MacOS or Linux
 
-## [Packaging into a .zip file](distrib/README.md)
 ## Use (for MacOS) [released installer](https://github.com/kotl/scratch-portable/releases)
+## [Packaging into a .zip file](distrib/README.md)
 
 ## Compile and run with nodejs (Linux or MacOS)
 
