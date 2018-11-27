@@ -16,9 +16,6 @@
   - [Use (for MacOS) released installer](#use-for-macos-released-installer)
   - [Packaging into a .zip file](#packaging-into-a-zip-file)
   - [Compile and run with nodejs (Linux or MacOS)](#compile-and-run-with-nodejs-linux-or-macos)
-  - [Step 1.](#step-1)
-  - [Step 2.](#step-2)
-  - [Step 3.](#step-3)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
