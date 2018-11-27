@@ -1,3 +1,29 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [What is Scratch Portable?](#what-is-scratch-portable)
+- [Packaged mode](#packaged-mode)
+- [Sharing on Local Area Network and notes on port 80 (http)](#sharing-on-local-area-network-and-notes-on-port-80-http)
+- [Using node-cluster for better performance](#using-node-cluster-for-better-performance)
+- [Running and connecting to Scratch Portable](#running-and-connecting-to-scratch-portable)
+  - [Connecting](#connecting)
+  - [WiFi client isolation](#wifi-client-isolation)
+  - [Public directory](#public-directory)
+- [Windows installation](#windows-installation)
+  - [Use released installer](#use-released-installer)
+  - [Create installer with NSIS](#create-installer-with-nsis)
+  - [Compiling with nodejs](#compiling-with-nodejs)
+- [MacOS or Linux installation](#macos-or-linux-installation)
+  - [Use (for MacOS) released installer](#use-for-macos-released-installer)
+  - [Packaging into a .zip file](#packaging-into-a-zip-file)
+  - [Compile and run with nodejs (Linux or MacOS)](#compile-and-run-with-nodejs-linux-or-macos)
+  - [Step 1.](#step-1)
+  - [Step 2.](#step-2)
+  - [Step 3.](#step-3)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # What is Scratch Portable?
 
 Scratch Portable is a modified version of Scratch 3.0 that is enabled with the following features:
@@ -71,13 +97,13 @@ You can add any files into 'public' directory which makes it browsable through t
 web. This could be useful if you want to share Scratch 2 project to be imported by student or
 a video or document to be watched or viewed.
 
-# Windows installation:
+# Windows installation
 
 ## Use [released installer](https://github.com/kotl/scratch-portable/releases)
 ## [Create installer with NSIS](win_distrib/README.md)
 ## [Compiling with nodejs](win/README.md)
 
-# Running / Installing Scratch Portable on MacOS or Linux
+# MacOS or Linux installation
 
 ## Use (for MacOS) [released installer](https://github.com/kotl/scratch-portable/releases)
 ## [Packaging into a .zip file](distrib/README.md)
