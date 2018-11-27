@@ -28,6 +28,42 @@ computer. Clusterization does not work in packaged mode. The following scripts a
 * serve-ind-cluster (MacOS / Linux)
 * win/serve-ind-cluster.bat (Windows)
 
+# Running and connecting to Scratch Portable
+Once you follow installation steps below and start it, you
+will see console window. It should explain what is your current IP address and how you should
+connect to it through the browser. The output in the window should be self-explanatory.
+Here is typical output:
+```
+BACKUP APP SERVER STARTED
+APP SERVER STARTED
+ADMIN SERVER STARTED
+--------------------------------------------------------------------
+--                                                                --
+--     Welcome to Scratch Portable                                --
+--                                                                --
+--     Scratch is running on 2 different ports                    --
+--     http://192.168.1.119                                       --
+--     http://192.168.1.119:3000                                  --
+--                                                                --
+--     Web directory for your education materials:                --
+--     http://192.168.1.119/public                                --
+--                                                                --
+--     Admin Panel is running at                                  --
+--     http://192.168.1.119:3001/admin                            --
+--                                                                --
+--     Default password for Admin panel is 'admin'.               --
+--     You will be asked to change it.                            --
+--                                                                --
+--     To sign into Scratch use any 4-letter username / password  --
+--     and it will be created automaticaly.                       --
+--                                                                --
+--     To stop Scratch Portable, press Ctrl+C                     --
+--                                                                --
+--------------------------------------------------------------------
+```
+
+In case you find that other computers can not connect to yours, make sure you are using the same Wifi SSID and 'Client Isolation' setting in your router is OFF. Alternatively, you can connect ethernet cable directly from the router to hosting computer and in that case 'Client Isolation' being off will not be required.
+
 # Windows installation:
 
 ## Use [released installer](https://github.com/kotl/scratch-portable/releases)
