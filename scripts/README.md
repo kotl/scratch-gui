@@ -29,6 +29,7 @@ computer. Clusterization does not work in packaged mode. The following scripts a
 * win/serve-ind-cluster.bat (Windows)
 
 # Running and connecting to Scratch Portable
+## Connecting
 Once you follow installation steps below and start it, you
 will see console window. It should explain what is your current IP address and how you should
 connect to it through the browser. The output in the window should be self-explanatory.
@@ -62,7 +63,13 @@ ADMIN SERVER STARTED
 --------------------------------------------------------------------
 ```
 
+## WiFi client isolation
 In case you find that other computers can not connect to yours, make sure you are using the same Wifi SSID and 'Client Isolation' setting in your router is OFF. Alternatively, you can connect ethernet cable directly from the router to hosting computer and in that case 'Client Isolation' being off will not be required.
+
+## Public directory
+You can add any files into 'public' directory which makes it browsable through the /public folder on the
+web. This could be useful if you want to share Scratch 2 project to be imported by student or
+a video or document to be watched or viewed.
 
 # Windows installation:
 
