@@ -5,12 +5,12 @@ to replicate Scratch Portable for multiple educator's computers.
 Target system where you will copy packaged .zip must be the same hardware wise.
 (OS Version, CPU, 32/64 bit, etc)
 
-## Step 1.
+### Install nodejs
 
   Install nodejs, either from here: https://nodejs.org/en/download/
   or using sudo apt-get install nodejs (Linux)
 
-## Step 2.
+### Build
 
   run:
   ./build-prod
@@ -19,7 +19,7 @@ Target system where you will copy packaged .zip must be the same hardware wise.
   If some errors occurred or connection gets interrupted, you may have to run
   this again in order to fully install / build repository.
 
-## Step 3.
+### Run
 
    Find .zip file inside distrib/ directory and copy it to target machine.
    Unpack and execute 'run' script.

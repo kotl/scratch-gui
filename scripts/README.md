@@ -108,12 +108,12 @@ a video or document to be watched or viewed.
 
 ## Compile and run with nodejs (Linux or MacOS)
 
-## Step 1.
+### Install nodejs
 
   Install nodejs, either from here: https://nodejs.org/en/download/
   or using sudo apt-get install nodejs
 
-## Step 2.
+### Build
 
   run:
   ./build-prod
@@ -122,7 +122,7 @@ a video or document to be watched or viewed.
   If some errors occurred or connection gets interrupted, you may have to run
   this again in order to fully install / build repository.
 
-## Step 3.
+### Run
 
   Now you are ready to run Scratch Portable. You can use this step again next
   time you boot your computer to start serving content. No need to repeat steps 1 and 2.
