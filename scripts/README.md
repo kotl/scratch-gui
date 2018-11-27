@@ -1,7 +1,5 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
 - [What is Scratch Portable?](#what-is-scratch-portable)
 - [Packaged mode](#packaged-mode)
 - [Sharing on Local Area Network and notes on port 80 (http)](#sharing-on-local-area-network-and-notes-on-port-80-http)
